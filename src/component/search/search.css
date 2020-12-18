@@ -1,0 +1,25 @@
+.menu__search {
+    border-radius: 5px;
+    margin: 0 8px 0 8px;
+    box-shadow: 0.5px 0.5px 10px rgb(63, 62, 62);
+    padding: 10px;
+    display: flex;
+    position: absolute;
+    position: relative;
+    background-color: white;
+}
+
+.menu__search-input {
+    width: 100%;
+    outline: none;
+    padding: 0 10px;
+    border: none;
+    position: relative;
+}
+
+.menu__search-button {
+    background-color: white;
+    border: none;
+    outline: none;
+    position: relative;
+}

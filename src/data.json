@@ -1,0 +1,110 @@
+[
+    {
+      "name": "Học viện nông nghiệp Việt Nam",
+      "lat": 21.004514,
+      "lng": 105.933037,
+      "adress": "phố Ngô Xuân Quảng, Trâu Quỳ, Gia Lâm, Hà Nội",
+      "img": "http://vanphonghocvien.vnua.edu.vn/uploads/news/2019_09/2016-0512hocvien004.jpg",
+      "link":"https://vnua.edu.vn/",
+      "infor":"vnua.edu.vn"
+    },
+    {
+      "name": "Đại học bách khoa Hà Nội",
+      "lat": 21.005994,
+      "lng": 105.843141,
+      "adress": "1 Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội",
+      "img": "https://news.diemthi.edu.vn/wp-content/uploads/2019/07/bk-9946-1563270717.jpg",
+      "link":"https://www.hust.edu.vn/",
+      "infor":"hust.edu.vn"
+    },
+    {
+      "name": "Đại học Thương Mại",
+      "lat": 21.037101,
+      "lng": 105.774798,
+      "adress": "79 Đường Hồ Tùng Mậu, Mai Dịch, Cầu Giấy, Hà Nội ",
+      "img": "https://www.hurrelleditions.com/wp-content/uploads/2018/11/%C4%91%E1%BA%A1i-h%E1%BB%8Dc-th%C6%B0%C6%A1ng-m%E1%BA%A1i-c%C3%B3-t%E1%BB%91t-kh%C3%B4ng.jpg",
+      "link":"https://tmu.edu.vn/",
+      "infor":"tmu.edu.vn"
+    },
+    {
+      "name": "Đại học Sư phạm Hà Nội",
+      "lat": 21.037405,
+      "lng": 105.783367,
+      "adress": "136 Xuân Thủy, Dịch Vọng Hậu, Cầu Giấy, Hà Nội ",
+      "img": "https://tintuyensinh365.net/wp-content/uploads/2018/07/con-duong-tinh-yeu-dep-het-nac-o-dh-su-pham-ha-noi.jpg",
+      "link":"http://hnue.edu.vn/",
+      "infor":"hnue.edu.vn"
+    },
+    {
+      "name": "Đại học Kinh tế quốc dân",
+      "lat": 21.000005,
+      "lng": 105.842199,
+      "adress": " 207 Giải Phóng, Đồng Tâm, Hai Bà Trưng, Hà Nội",
+      "img": "https://36corp.com/wp-content/uploads/2017/12/2_zing.jpg",
+      "link":"https://www.neu.edu.vn/",
+      "infor":"neu.edu.vn"
+    },
+    {
+      "name": "Đại học mỏ địa chất",
+      "lat": 21.072393,
+      "lng": 105.773886,
+      "adress": "Cổ Nhuế, Từ Liêm, Hà Nội",
+      "img": "https://i.ytimg.com/vi/9Vo4q4vQWzw/maxresdefault.jpg",
+      "link":"http://humg.edu.vn/Pages/home.aspx",
+      "infor":"humg.edu.vn"
+    },
+    {
+      "name": "Đại học Kiến trúc Hà nội",
+      "lat": 20.980612,
+      "lng": 105.789437,
+      "adress": "Km10 Nguyễn Trãi, P. Văn Quán, Hà Đông, Hà Nội",
+      "img": "https://media.doisongphapluat.com/2020/08/02/dai_hoc_kien_truc_ha_noi_nang_tam_song_ao_hut_mat_sinh_vien_boi_nhung_toa_nha_mau_me_hoa_la_dspl_2.jpg",
+      "link":"http://hau.edu.vn/",
+      "infor":"hau.edu.vn"
+    },
+    {
+      "name": "Đại học Ngoại thương",
+      "lat": 21.023156,
+      "lng": 105.805459,
+      "adress": "91 Chùa Láng, Láng Thượng, Đống Đa, Hà Nội",
+      "img": "https://giangviendhnt.com/images/stores/2017/07/21/%E1%BA%A3nh%20b%C3%A0i%209.jpg",
+      "link":"http://www.ftu.edu.vn/",
+      "infor":"ftu.edu.vn"
+    },
+    {
+      "name": "Học viện Ngân Hàng",
+      "lat": 21.008702,
+      "lng": 105.828574,
+      "adress": "12 Chùa Bộc, Quang Trung, Đống Đa, Hà Nội",
+      "img": "https://media.baodautu.vn/Images/hoanganh/2019/12/18/hoc-vien-ngan-hang-phan-vien-phu-yen-5.jpg",
+      "link":"http://www.hvnh.edu.vn/",
+      "infor":"hvnh.edu.vn"
+    },
+    {
+      "name": "Đại học Lâm nghiệp",
+      "lat": 20.911583,
+      "lng": 105.576457,
+      "adress": "QL21, TT. Xuân Mai, Chương Mỹ, Hà Nội",
+      "img": "https://d3av3o1z276gfa.cloudfront.net/images/place/0LZHMdEp49GIvwSnDYUdZSzzCxiF0zqK.jpeg",
+      "link":"https://vnuf.edu.vn/",
+      "infor":"vnuf.edu.vn"
+    },
+    {
+      "name": "Học viện báo chí và tuyên truyền",
+      "lat": 21.037040,
+      "lng": 105.788851,
+      "adress": "36 Xuân Thủy, Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
+      "img": "https://truongcaodangyduocpasteur.edu.vn/wp-content/uploads/2017/07/3ddcd5198_83dfa7be7_ajc.jpg",
+      "link":"https://ajc.hcma.vn/Pages/default.aspx",
+      "infor":"ajs.hcma.vn"
+    },
+    {
+      "name": "Đại học Luật Hà Nội",
+      "lat": 21.021435,
+      "lng": 105.809768,
+      "adress": "87 Nguyễn Chí Thanh, Thành Công, Đống Đa, Hà Nội",
+      "img": "https://photo-1-baomoi.zadn.vn/w1000_r1/2020_08_30_541_36215509/68f8d6365a75b32bea64.jpg",
+      "link":"https://hlu.edu.vn/",
+      "infor":"hlu.edu.vn"
+    }
+  ]

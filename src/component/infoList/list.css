@@ -1,0 +1,12 @@
+.div1 {
+    margin-left: 10px;
+    display:flex;
+}
+
+.text {
+    font-size:15px;
+    margin-left:5px;
+    margin-top:0;
+    text-decoration: none;
+    color: black;
+}

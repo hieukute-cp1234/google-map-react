@@ -1,0 +1,31 @@
+.menu {
+    width: 550px;
+    height: 110%;
+    background-color: white;
+    margin: -420px 0px 0px -910px;
+    padding: 0;
+    box-shadow: 0.5px 0.5px 10px #666;
+    position: absolute;
+}
+
+.List_link {
+    font-size: 16px;
+    text-decoration: none;
+    color: black;
+}
+
+.menu_list {
+    list-style: none;
+}
+
+.menu_list-item {
+    display:flex;
+}
+
+.menu_list-item:hover {
+    background-color: rgb(216, 211, 211);
+}
+
+input[type="checkbox"] {
+    transform: scale(2);
+}

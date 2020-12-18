@@ -1,0 +1,183 @@
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { Form, Input, Tooltip, Select, Row, Col, Button, message } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import firebase from '../../firebase/config'
+
+const { Option } = Select;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 16,
+      offset: 8,
+    },
+  },
+};
+
+export default function Registration() {
+  const history = useHistory();
+
+  const [form] = Form.useForm();
+
+  const onFinish = values => {
+    // confirm: "1"
+    // email: "hieu@gmail.com"
+    // nickname: "hieukute"
+    // password: "1"
+    let user = {
+      email: values.email,
+      password: values.password,
+    }
+
+    firebase.auth()
+      .createUserWithEmailAndPassword(user.email, user.password)
+      .catch(function (error) {
+        if (error.code) {
+          console.log(error.code)
+        }
+      });
+
+    firebase.auth()
+      .signInWithEmailAndPassword(user.mail, user.password)
+      .catch(function (error) {
+        if (error.code) {
+          console.log(error)
+        }
+      })
+
+    
+    console.log('thông tin:', values);
+    // message.success('dang ki thanh cong', 3)
+    // setTimeout(() => {
+    //   history.push('/login')
+    // }, 3000)
+  };
+
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select style={{ width: 70 }}>
+        <Option value="86">+86</Option>
+      </Select>
+    </Form.Item>
+  );
+
+  return (
+    <>
+      <Row>
+        <Col span={10} offset={6}>
+          <h1 style={{ textAlign: 'center', margin: '10px 0px 10px 130px' }}>Đăng kí</h1>
+          <Row>
+            <Col span={24}>
+              <Form
+                {...formItemLayout}
+                form={form}
+                name="register"
+                onFinish={onFinish}
+                initialValues={{
+                  prefix: '86',
+                }}
+                scrollToFirstError
+              >
+                <Form.Item
+                  name="email"
+                  label="E-mail"
+                  rules={[
+                    {
+                      type: 'email',
+                      message: 'The input is not valid E-mail!',
+                    },
+                    {
+                      required: true,
+                      message: 'Please input your E-mail!',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="nickname"
+                  label={
+                    <span>
+                      Tên đăng nhập&nbsp;
+                      <Tooltip title="What do you want others to call you?">
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </span>
+                  }
+                  rules={[{ required: true, message: 'Please input your nickname!', whitespace: true }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  label="Mật khẩu"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your password!',
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item
+                  name="confirm"
+                  label="Nhập lại mật khẩu"
+                  dependencies={['password']}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please confirm your password!',
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(rule, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject('Mật khẩu đã nhập không khớp!');
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+                <Form.Item
+                  name="phone"
+                  label="Số điện thoại"
+                  rules={[{ required: true, message: 'Please input your phone number!' }]}
+                >
+                  <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Đăng kí
+                  </Button>
+                  <Button style={{ marginLeft: '30px' }} type="primary" onClick={() => history.push('/login')}>
+                    Đăng nhập
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </>
+  )
+}
