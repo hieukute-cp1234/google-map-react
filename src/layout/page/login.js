@@ -20,16 +20,18 @@ function LoginFrom() {
   const history = useHistory();
 
   const onFinish = value => {
-    // email: "hieu@gmail.com"
-    // password: "hieu1234"
     console.log(value);
-    let userSignIn = firebase.auth().currentUser;
-    
-    console.log(userSignIn);
-    if(userSignIn){
-      console.log(userSignIn.email);
-    } 
-    //history.push('/infor');
+    let user = firebase.auth().currentUser;
+
+    console.log(user);
+    if (user) {
+      console.log(user);
+      if (value.email === user.email) {
+        history.push('/infor');
+      } else {
+        console.log('sai');
+      }
+    }
   };
 
   const onFinishFailed = errorInfo => {
@@ -92,4 +94,4 @@ function LoginFrom() {
   )
 }
 
-export default LoginFrom;
+export default React.memo(LoginFrom);

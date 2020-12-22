@@ -29,7 +29,7 @@ const tailFormItemLayout = {
   },
 };
 
-export default function Registration() {
+function Registration() {
   const history = useHistory();
 
   const [form] = Form.useForm();
@@ -39,33 +39,28 @@ export default function Registration() {
     // email: "hieu@gmail.com"
     // nickname: "hieukute"
     // password: "1"
-    let user = {
-      email: values.email,
-      password: values.password,
-    }
 
     firebase.auth()
-      .createUserWithEmailAndPassword(user.email, user.password)
+      .createUserWithEmailAndPassword(values.email, values.password)
       .catch(function (error) {
         if (error.code) {
           console.log(error.code)
         }
       });
 
-    firebase.auth()
-      .signInWithEmailAndPassword(user.mail, user.password)
-      .catch(function (error) {
-        if (error.code) {
-          console.log(error)
-        }
-      })
+    // firebase.auth()
+    //   .signInWithEmailAndPassword(user.mail, user.password)
+    //   .catch(function (error) {
+    //     if (error.code) {
+    //       console.log(error)
+    //     }
+    //   })
 
-    
     console.log('thông tin:', values);
-    // message.success('dang ki thanh cong', 3)
-    // setTimeout(() => {
-    //   history.push('/login')
-    // }, 3000)
+    message.success('dang ki thanh cong', 3)
+    setTimeout(() => {
+      history.push('/login')
+    }, 3000)
   };
 
   const prefixSelector = (
@@ -181,3 +176,5 @@ export default function Registration() {
     </>
   )
 }
+
+export default React.memo(Registration);

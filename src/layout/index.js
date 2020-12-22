@@ -9,22 +9,31 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import firebase from '../firebase/config'
 
-export default function AppMap() {
+function AppMap() {
 
   const PrivateRouter = ({ children, ...rest }) => {
-    const isAuthenticated = '123456';
-    console.log({children})
+    const isAuthenticated = () => {
+      const user = firebase.auth().currentUser;
+      console.log(user)
+      if (user.email) {
+        return true;
+      }
+      return false;
+    }
+
+    console.log({ children })
     return (
       <Route
         {...rest}
         render={({ location }) =>
-          isAuthenticated ? (<Redirect
+          isAuthenticated ? children : (<Redirect
             to={{
               pathname: "/login",
               state: { from: location }
             }}
-          />) : children
+          />)
         }
       />
     )
@@ -37,17 +46,19 @@ export default function AppMap() {
           <Route path="/registration">
             <Registration />
           </Route>
-          <Route path="/infor">
+          <PrivateRouter path="/infor">
             <FormInfor />
-          </Route>
+          </PrivateRouter>
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/">
+          <PrivateRouter path="/">
             <Home />
-          </Route>
+          </PrivateRouter>
         </Switch>
       </div>
     </Router>
   )
 }
+
+export default React.memo(AppMap);

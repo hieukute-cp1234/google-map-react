@@ -112,4 +112,4 @@ function FormInfor() {
   )
 }
 
-export default FormInfor;
+export default React.memo(FormInfor);
