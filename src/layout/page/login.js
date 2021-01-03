@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { useHistory } from 'react-router-dom';
 import firebase from '../../firebase/config'
@@ -13,6 +13,16 @@ const tailLayout = {
 
 function LoginFrom() {
 
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log(`người dùng ${user.email} vừa đăng nhập!`)
+      } else {
+        console.log('không có người dùng nào đăng nhập!')
+      }
+    });
+  })
+
   const click = () => {
     history.push('/registration');
   }
@@ -22,20 +32,17 @@ function LoginFrom() {
   const onFinish = value => {
     console.log(value);
     let user = firebase.auth().currentUser;
-
-    console.log(user);
-    if (user) {
-      console.log(user);
-      if (value.email === user.email) {
-        history.push('/infor');
-      } else {
-        console.log('sai');
-      }
-    }
-  };
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+    console.log(user.providerId,user.emailVerified,user.email);
+    firebase.auth()
+      .signInWithEmailAndPassword(value.email,value.password)
+      .then(function(){
+        history.push('/infor')
+      })
+      .catch(function (error) {
+        if (error) {
+          console.log(error.code,'Email hoặc PassWord không hợp lệ!');
+        }
+      })
   };
 
   return (
@@ -50,7 +57,6 @@ function LoginFrom() {
                 name="basic"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
               >
                 <Form.Item
                   name="email"

@@ -3,15 +3,23 @@ import '../menu/menu.css';
 import image from '../image/kinhlup.png';
 import InfoList from '../infoList/index';
 import Search from '../search/index'
-import { PropertySafetyFilled } from '@ant-design/icons';
+//import { PropertySafetyFilled } from '@ant-design/icons';
 
-export default function Menu({ markerList, handler}) {
-
+export default function Menu({ markerList, handler }) {
+  //seach trên menu
   const [search, setSearch] = useState('');
-  const [info, setInfo] = useState(null);//xet xuat hien cua thong tin truong
-  const [showInfo, setShowInfo] = useState(true);//xet an hien cua thong tin cac truong sau da hien khi click
-  const [showList, setShowList] = useState(true);//xet viec an hien cua list cac truong
-  const [marginTop, setMarginTop] = useState('10px');//xet vi tri cua input khi hien thi anh
+
+  //xét sự xuất hiện của thông tin trường
+  const [info, setInfo] = useState(null);
+
+  //xet việc ẩn hiện của thông tin các trrường sau khi click
+  const [showInfo, setShowInfo] = useState(true);
+
+  //xét việc ẩn hiện của list các trường sau khi seach
+  const [showList, setShowList] = useState(true);
+
+  //vị trí cảu input seach sau khi ảnh hiển thị
+  const [marginTop, setMarginTop] = useState('10px');
 
   const handleSearch = (e) => {
     let value = e.target.value;
@@ -31,12 +39,11 @@ export default function Menu({ markerList, handler}) {
         handleSearch={handleSearch}
         image={image}
       />
-
       {showList ? (
         <ul className='menu_list'>
           {markerList.map((marker) => {
             const clickItem = () => {
-              setMarginTop('-380px');
+              setMarginTop('-290px');
               setShowInfo(true);
               setShowList(false);
               setInfo(<InfoList marker={marker} />)
@@ -47,7 +54,9 @@ export default function Menu({ markerList, handler}) {
                 <div
                   style={{ padding: '10px', fontSize: '16px' }}
                   onClick={clickItem}
-                >{marker.name}</div>
+                >
+                  {marker.name}
+                </div>
               </li>
             )
           })}

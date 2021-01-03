@@ -24,6 +24,7 @@ function AppMap() {
     }
 
     console.log({ children })
+    
     return (
       <Route
         {...rest}

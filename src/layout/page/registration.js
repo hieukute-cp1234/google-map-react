@@ -33,7 +33,10 @@ function Registration() {
   const history = useHistory();
 
   const [form] = Form.useForm();
-
+  let user = {
+    email: 'user@gmail.com',
+    password: '123456'
+  }
   const onFinish = values => {
     // confirm: "1"
     // email: "hieu@gmail.com"
@@ -48,20 +51,19 @@ function Registration() {
         }
       });
 
-    // firebase.auth()
-    //   .signInWithEmailAndPassword(user.mail, user.password)
-    //   .catch(function (error) {
-    //     if (error.code) {
-    //       console.log(error)
-    //     }
-    //   })
-
     console.log('thông tin:', values);
-    message.success('dang ki thanh cong', 3)
+    message.success('Đăng kí thành công', 2)
     setTimeout(() => {
       history.push('/login')
-    }, 3000)
+    }, 2000)
   };
+
+  const click = () => {
+    let user = firebase.auth().currentUser;
+    if (user) {
+      console.log(user.email);
+    }
+  }
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -167,6 +169,7 @@ function Registration() {
                   <Button style={{ marginLeft: '30px' }} type="primary" onClick={() => history.push('/login')}>
                     Đăng nhập
                   </Button>
+                  <Button onClick={click}>click</Button>
                 </Form.Item>
               </Form>
             </Col>

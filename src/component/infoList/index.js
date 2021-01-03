@@ -10,7 +10,7 @@ InfoList.propTypes = {
 export default function InfoList(props) {
   return (
     <>
-      <img src={props.marker.img} style={{ width: '550px', height: '300px' }} />
+      <img src={props.marker.img} style={{ width: '400px', height: '220px' }} />
       <div>
         <h1 style={{ marginLeft: '10px' }}>{props.marker.name}</h1>
         <div className="div1">

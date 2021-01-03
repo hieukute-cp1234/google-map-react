@@ -1,5 +1,5 @@
 /* global google */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
 import data from './data.json';
 import './App.css';
@@ -7,18 +7,31 @@ import Menu from './component/menu/index';
 import InfoWindow from './component/infoWindow/index';
 import Marker from './component/marker/index';
 import Eye from './component/buttoneye/eye';
-import { EyeInvisibleFilled, EyeFilled } from '@ant-design/icons';
+import {CaretRightOutlined,CaretLeftOutlined } from '@ant-design/icons';
+import firebase from './firebase/config'
 //import HeatMap from './component/heatmap/index';
 
 function App(props) {
 
-  const [icon, setIcon] = useState(<EyeFilled style={{ fontSize: '30px' }} />);//thay icon khi an hien menu
-  const [eye, setEye] = useState(false);//xet viec an hien cua menu
+  //thay đổi icon khi ẩn hiện menu
+  const [icon, setIcon] = useState(<CaretRightOutlined style={{ fontSize: '30px' }} />);
+
+  //xét việc ẩn hiện của menu
+  const [eye, setEye] = useState(false);
+
+  //truyền data marker
   const [markers, setMarkers] = useState(data);
-  const [selected, setSelected] = useState(null);//xet viec an hien cua infoWindow
-  const [marginLeft, setMarginLeft] = useState('-910px');//xet vi tri cua icon  khi menu an hien
+
+  //xét việc ẩn hiện của infoWindow
+  const [selected, setSelected] = useState(null);
+
+  //xét vị trí của icon khi ẩn hiện menu
+  const [marginLeft, setMarginLeft] = useState('-625px');
+
   const [heatMapVisible, setHeatMapVisible] = useState(true);
   const [heatMap, setHeatMap] = useState(null);
+
+  //các điểm của heatMap
   const [heatMapPoint, setHeatMapPoint] = useState([
     {
       lat: 21.005994,
@@ -33,6 +46,17 @@ function App(props) {
       lng: 105.860945
     }
   ]);
+
+  //lấy dữ liệu từ firebase Store
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const db = firebase.firestore();
+  //     const data = await db.collection('Lake').get();
+  //     setMarkers(data.docs.map(doc => doc.data()));
+  //   }
+  //   fetchData()
+  // }, [])
+
   //heatmap
   const el = useRef(heatMap);
 
@@ -82,12 +106,12 @@ function App(props) {
   const clickEye = () => {//ham nay xu ly giao dien khi menu an hien
     if (eye === true) {
       setEye(false);
-      setMarginLeft('-910px');
-      setIcon(<EyeFilled style={{ fontSize: '30px' }} />);
+      setMarginLeft('-625px');
+      setIcon(<CaretRightOutlined style={{ fontSize: '30px' }}/>)
     } else {
       setEye(true);
-      setMarginLeft('-360px');
-      setIcon(<EyeInvisibleFilled style={{ fontSize: '30px' }} />);
+      setMarginLeft('-225px');
+      setIcon(<CaretLeftOutlined style={{ fontSize: '30px' }}/>)
     }
   }
 
@@ -113,7 +137,7 @@ function App(props) {
       lat: 21.027763,
       lng: 105.83416
     },
-    zoom: 13
+    zoom: 12
   }
 
   const clickCheckBox = (id) => {
@@ -135,7 +159,8 @@ function App(props) {
         lng: 105.860945
       },
     ];
-    console.log(map, maps)
+    console.log(map, maps);
+
     var bermudaTriangle = new maps.Polygon({
       paths: triangleCoords,
       strokeColor: "#FF0000",

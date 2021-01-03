@@ -1,7 +1,8 @@
 import React from 'react'
 import Layout from '../component/layout'
-import { Row, Col, Input, Button, Form , Space} from 'antd'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Row, Col, Input, Button, Form, Space } from 'antd'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import firebase from '../../firebase/config'
 
 const layout = {
   labelCol: { span: 8 },
@@ -9,9 +10,40 @@ const layout = {
 };
 
 function FormInfor() {
-  const onFinish = values => {
-    console.log('Received values of form:', values);
-  };
+
+  let db = firebase.firestore();
+
+  const onFinishProduct = value => {
+    console.log(value.product[0].name);
+    for (let i = 0; i < value.product.length; i++) {
+      db.collection('Product').doc(`${value.product[i].name}`).set({
+        name: value.product[i].name,
+        amount: value.product[i].amount
+      })
+        .then(function () {
+          console.log('ghi du lieu thanh cong')
+        })
+        .catch(function (e) {
+          console.log('ghi that bai', e)
+        })
+    }
+  }
+
+  const onFinishLatLng = values => {
+    console.log(values)
+    db.collection('Farm').doc(values.name).set({
+      lat: values.lat,
+      lng: values.lng
+    })
+      .then(function () {
+        console.log('ghi du lieu thanh cong')
+      })
+      .catch(function (e) {
+        console.log('ghi that bai', e)
+      })
+    console.log(db);
+  }
+
   return (
     <>
       <Layout>
@@ -22,38 +54,64 @@ function FormInfor() {
               <Col span={24}>
                 <p style={{ textAlign: 'center', margin: '10px 0 10px 150px' }}>Nhập vào vị trí trại của bạn</p>
                 <Form
+                  onFinish={onFinishLatLng}
                   {...layout}
                   name="basic"
+                  initialValues={{ remember: true }}
                 >
                   <Form.Item
+                    label="Tên trang trại"
+                    name="name"
+                    rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
+                  >
+                    <Input type="text" />
+                  </Form.Item>
+                  <Form.Item
                     label="Vĩ độ (Lat):"
+                    name="lat"
+                    rules={[{ required: true, message: 'Hãy nhập vào vĩ độ!' }]}
                   >
                     <Input type="number" />
                   </Form.Item>
                   <Form.Item
                     label="Kinh độ (Lng):"
+                    name="lng"
+                    rules={[{ required: true, message: 'Hãy nhập vào kinh độ!' }]}
                   >
                     <Input type='number' />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" style={{ margin: '20px 0 0 350px' }}>
+                      Lưu tọa độ
+                    </Button>
                   </Form.Item>
                 </Form>
               </Col>
             </Row>
             <Row>
               <Col span={24} offset={6}>
-                <p style={{ textAlign:'center', margin:'0px 0 10px -150px'}}>Nhập vào số lượng cây trong trại (nếu có)</p>
-                <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                  <Form.List name=''>
+                <p style={{ textAlign: 'center', margin: '0px 0 10px -150px' }}>Nhập vào số lượng cây hoặc con trong trại</p>
+                <Form name="dynamic_form_nest_item" onFinish={onFinishProduct} autoComplete="off">
+                  <Form.List name='product'>
                     {(fields, { add, remove }) => (
                       <>
                         {fields.map(field => (
-                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 , marginLeft:-7}} align="baseline">
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8, marginLeft: -7 }} align="baseline">
                             <Form.Item
-                             label='Tên cây:'
+                              label='Cây/Con:'
+                              {...field}
+                              name={[field.name, 'name']}
+                              fieldKey={[field.fieldKey, 'name']}
+                              rules={[{ required: true, message: 'Nhập vào tên cây/con!' }]}
                             >
-                              <Input placeholder="Tên cây" type='text'/>
+                              <Input placeholder="Cây/Con" type='text' />
                             </Form.Item>
                             <Form.Item
                               label='Số lượng:'
+                              {...field}
+                              name={[field.name, 'amount']}
+                              fieldKey={[field.fieldKey, 'amount']}
+                              rules={[{ required: true, message: 'Nhập vào số lượng!' }]}
                             >
                               <Input placeholder="Số lượng" type='number' />
                             </Form.Item>
@@ -61,50 +119,21 @@ function FormInfor() {
                           </Space>
                         ))}
                         <Form.Item>
-                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width:'500px'}}>
-                            Thêm cây
+                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{ width: '500px' }}>
+                            Thêm cây/con
                           </Button>
                         </Form.Item>
                       </>
                     )}
                   </Form.List>
+                  <Form.Item>
+                    <Button type='primary' htmlType='submit' style={{ margin: '20px 0 0 190px' }}>
+                      Lưu thông tin
+                    </Button>
+                  </Form.Item>
                 </Form>
               </Col>
             </Row>
-            <Row>
-              <Col span={24} offset={6}>
-              <p style={{ textAlign:'center', margin:'0px 0 10px -150px'}}>Nhập vào số lượng vật nuôi trong trại (nếu có)</p>
-                <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                  <Form.List name=''>
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map(field => (
-                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 , marginLeft:-7}} align="baseline">
-                            <Form.Item
-                             label='Tên vật nuôi:'
-                            >
-                              <Input placeholder="Tên cây" type='text'/>
-                            </Form.Item>
-                            <Form.Item
-                              label='Số lượng:'
-                            >
-                              <Input placeholder="Số lượng" type='number' />
-                            </Form.Item>
-                            <MinusCircleOutlined onClick={() => remove(field.name)} />
-                          </Space>
-                        ))}
-                        <Form.Item>
-                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{width:'500px'}}>
-                            Thêm vật nuôi
-                          </Button>
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
-                </Form>
-              </Col>
-            </Row>
-            <Button type='primary' htmlType='submit' style={{margin:'20px 0 0 350px'}}>Lưu thông tin</Button>
           </Col>
         </Row>
       </Layout>

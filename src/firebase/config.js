@@ -1,16 +1,16 @@
-
 import firebase from 'firebase/app';
 import 'firebase/auth';
-
+import "firebase/analytics";
+import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA8be5qb3625eCvAeHq3K-uq-ZjYSCS8UI",
-  authDomain: "react-map-firebase.firebaseapp.com",
-  projectId: "react-map-firebase",
-  storageBucket: "react-map-firebase.appspot.com",
-  messagingSenderId: "1023760726581",
-  appId: "1:1023760726581:web:5755fb7f64c1237c8e4f7c",
-  measurementId: "G-HF4JEMYRY9"
+  apiKey: "AIzaSyBxenQTrAyBmLb6tp-PMr2fBvaT7tLJoKs",
+  authDomain: "fir-map-app-df840.firebaseapp.com",
+  projectId: "fir-map-app-df840",
+  storageBucket: "fir-map-app-df840.appspot.com",
+  messagingSenderId: "148001978370",
+  appId: "1:148001978370:web:b234e4a2676ae75cfccf1b",
+  measurementId: "G-SZR0TS5XZ1"
 };
 
 firebase.initializeApp(firebaseConfig);
