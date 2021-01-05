@@ -1,6 +1,6 @@
 import React from 'react'
 import Layout from '../component/layout'
-import { Row, Col, Input, Button, Form, Space } from 'antd'
+import { Row, Col, Input, Button, Form, Space, message } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import firebase from '../../firebase/config'
 
@@ -21,20 +21,25 @@ function FormInfor() {
         amount: value.product[i].amount
       })
         .then(function () {
-          console.log('ghi du lieu thanh cong')
+          console.log('ghi dữ liệu thành công!')
         })
         .catch(function (e) {
-          console.log('ghi that bai', e)
+          console.log('ghi dữ liệu thất bại!', e)
         })
     }
   }
 
   const onFinishLatLng = values => {
     console.log(values)
-    db.collection('Farm').doc(values.name).set({
-      lat: values.lat,
-      lng: values.lng
-    })
+    db.collection(values.name)
+      .doc(values.nameNumber).set({
+        lat: values.lat,
+        lng: values.lng
+      })
+      // .doc('01').set({
+      //   name: values.product[0].name,
+      //   amuount: values.prodcut[0].amuount
+      // })
       .then(function () {
         console.log('ghi du lieu thanh cong')
       })
@@ -42,6 +47,7 @@ function FormInfor() {
         console.log('ghi that bai', e)
       })
     console.log(db);
+    message.success('Lưu thành công', 2)
   }
 
   return (
@@ -67,6 +73,13 @@ function FormInfor() {
                     <Input type="text" />
                   </Form.Item>
                   <Form.Item
+                    label="Cơ sở"
+                    name="nameNumber"
+                    rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
+                  >
+                    <Input type="text" />
+                  </Form.Item>
+                  <Form.Item
                     label="Vĩ độ (Lat):"
                     name="lat"
                     rules={[{ required: true, message: 'Hãy nhập vào vĩ độ!' }]}
@@ -85,6 +98,40 @@ function FormInfor() {
                       Lưu tọa độ
                     </Button>
                   </Form.Item>
+                  {/* <Form.List name='product'>
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map(field => (
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8, marginLeft: -7 }} align="baseline">
+                            <Form.Item
+                              label='Cây/Con:'
+                              {...field}
+                              name={[field.name, 'name']}
+                              fieldKey={[field.fieldKey, 'name']}
+                              rules={[{ required: true, message: 'Nhập vào tên cây/con!' }]}
+                            >
+                              <Input placeholder="Cây/Con" type='text' />
+                            </Form.Item>
+                            <Form.Item
+                              label='Số lượng:'
+                              {...field}
+                              name={[field.name, 'amount']}
+                              fieldKey={[field.fieldKey, 'amount']}
+                              rules={[{ required: true, message: 'Nhập vào số lượng!' }]}
+                            >
+                              <Input placeholder="Số lượng" type='number' />
+                            </Form.Item>
+                            <MinusCircleOutlined onClick={() => remove(field.name)} />
+                          </Space>
+                        ))}
+                        <Form.Item>
+                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />} style={{ width: '500px' }}>
+                            Thêm cây/con
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List> */}
                 </Form>
               </Col>
             </Row>

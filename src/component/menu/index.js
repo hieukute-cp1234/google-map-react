@@ -18,7 +18,7 @@ export default function Menu({ markerList, handler }) {
   //xét việc ẩn hiện của list các trường sau khi seach
   const [showList, setShowList] = useState(true);
 
-  //vị trí cảu input seach sau khi ảnh hiển thị
+  //vị trí của input seach sau khi ảnh hiển thị
   const [marginTop, setMarginTop] = useState('10px');
 
   const handleSearch = (e) => {

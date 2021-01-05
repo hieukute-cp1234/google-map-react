@@ -15,6 +15,8 @@ export default function InfoWindow(props) {
         <div style={{ padding: '1px', textAlign: 'center', fontSize: '12px' }}>
           <h4>{`${props.selected.name}`}</h4>
           <p>{`${props.selected.adress}`}</p>
+          <p>{props.selected.lat}</p>
+          <p>{props.selected.lng}</p>
         </div>
       </div>
     </>

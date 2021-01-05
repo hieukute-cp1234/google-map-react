@@ -20,7 +20,7 @@ function App(props) {
   const [eye, setEye] = useState(false);
 
   //truyền data marker
-  const [markers, setMarkers] = useState(data);
+  const [markers, setMarkers] = useState([]);
 
   //xét việc ẩn hiện của infoWindow
   const [selected, setSelected] = useState(null);
@@ -28,6 +28,7 @@ function App(props) {
   //xét vị trí của icon khi ẩn hiện menu
   const [marginLeft, setMarginLeft] = useState('-625px');
 
+  //heatMap
   const [heatMapVisible, setHeatMapVisible] = useState(true);
   const [heatMap, setHeatMap] = useState(null);
 
@@ -48,14 +49,14 @@ function App(props) {
   ]);
 
   //lấy dữ liệu từ firebase Store
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const db = firebase.firestore();
-  //     const data = await db.collection('Lake').get();
-  //     setMarkers(data.docs.map(doc => doc.data()));
-  //   }
-  //   fetchData()
-  // }, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = firebase.firestore();
+      const data = await db.collection('Farm').get();
+      setMarkers(data.docs.map(doc => doc.data()));
+    }
+    fetchData()
+  }, [])
 
   //heatmap
   const el = useRef(heatMap);
@@ -119,6 +120,7 @@ function App(props) {
     setSelected(null);
   }
 
+  //click vào map để lấy marker (inforWindow có tọa độ gps)
   const clickMap = (latlng) => {
     const newMarker = [
       ...markers,
@@ -130,6 +132,7 @@ function App(props) {
 
     setMarkers(newMarker);
     setSelected(null);
+    console.log(latlng);
   }
 
   const map = {
@@ -187,7 +190,7 @@ function App(props) {
         // yesIWantToUseGoogleMapApiInternals
         // onGoogleApiLoaded={({ map, maps }) => googleMapPolygon(map, maps)}
         //layerTypes={['TrafficLayer', 'TransitLayer','BicyclingLayer']}
-        onClick={onClickMap}
+        onClick={clickMap}
       >
         {eye ? (markers.map((marker) =>
           <Marker

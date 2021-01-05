@@ -9,27 +9,18 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import firebase from '../firebase/config'
+import { CheckUser,checkLogin } from './checkUser/check'
 
 function AppMap() {
 
   const PrivateRouter = ({ children, ...rest }) => {
-    const isAuthenticated = () => {
-      const user = firebase.auth().currentUser;
-      console.log(user)
-      if (user.email) {
-        return true;
-      }
-      return false;
-    }
+    const isAuthenticated = checkLogin();
 
-    console.log({ children })
-    
     return (
       <Route
         {...rest}
         render={({ location }) =>
-          isAuthenticated ? children : (<Redirect
+          isAuthenticated ? (children) : (<Redirect
             to={{
               pathname: "/login",
               state: { from: location }
@@ -47,15 +38,15 @@ function AppMap() {
           <Route path="/registration">
             <Registration />
           </Route>
-          <PrivateRouter path="/infor">
+          <Route path="/infor">
             <FormInfor />
-          </PrivateRouter>
+          </Route>
           <Route path="/login">
             <Login />
           </Route>
-          <PrivateRouter path="/">
+          <Route path="/">
             <Home />
-          </PrivateRouter>
+          </Route>
         </Switch>
       </div>
     </Router>

@@ -14,7 +14,11 @@ export default function Marker(props) {
   }
   return (
     <>
+      <div className="div_image">
+        click gps
+      </div>
       <img
+        className='image'
         style={styles}
         src={ImgMarker}
         onClick={props.clickMarker}

@@ -33,16 +33,12 @@ function Registration() {
   const history = useHistory();
 
   const [form] = Form.useForm();
-  let user = {
-    email: 'user@gmail.com',
-    password: '123456'
-  }
+
   const onFinish = values => {
     // confirm: "1"
     // email: "hieu@gmail.com"
     // nickname: "hieukute"
     // password: "1"
-
     firebase.auth()
       .createUserWithEmailAndPassword(values.email, values.password)
       .catch(function (error) {
@@ -50,8 +46,17 @@ function Registration() {
           console.log(error.code)
         }
       });
-
     console.log('thông tin:', values);
+
+    // let user = firebase.auth().currentUser;
+    // console.log(user);
+    // if (user != null) {
+    //   values.nickname = user.displayName;
+    //   user.providerData.forEach(function(index){
+    //     console.log('name',index.displayName);
+    //   })
+    // }
+
     message.success('Đăng kí thành công', 2)
     setTimeout(() => {
       history.push('/login')
@@ -61,7 +66,10 @@ function Registration() {
   const click = () => {
     let user = firebase.auth().currentUser;
     if (user) {
-      console.log(user.email);
+      user.updateProfile({
+        displayName:'minh',
+      })
+      console.log(user);
     }
   }
 

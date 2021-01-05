@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { useHistory } from 'react-router-dom';
-import firebase from '../../firebase/config'
+import firebase from '../../firebase/config';
+import { CheckUser } from '../checkUser/check'
 
 const layout = {
   labelCol: { span: 8 },
@@ -29,20 +30,18 @@ function LoginFrom() {
 
   const history = useHistory();
 
-  const onFinish = value => {
+  const onFinish = async (value) => {
     console.log(value);
-    let user = firebase.auth().currentUser;
-    console.log(user.providerId,user.emailVerified,user.email);
-    firebase.auth()
-      .signInWithEmailAndPassword(value.email,value.password)
-      .then(function(){
-        history.push('/infor')
-      })
-      .catch(function (error) {
-        if (error) {
-          console.log(error.code,'Email hoặc PassWord không hợp lệ!');
-        }
-      })
+    const data = await CheckUser(value.email, value.password);
+    if (data === true) {
+      history.push('/infor');
+    } else {
+      console.log('Email hoặc Password không đúng!');
+    }
+    let userEmail = firebase.auth().currentUser;
+    if (userEmail) {
+      console.log(userEmail.email);
+    }
   };
 
   return (
