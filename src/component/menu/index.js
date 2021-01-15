@@ -5,7 +5,7 @@ import InfoList from '../infoList/index';
 import Search from '../search/index'
 //import { PropertySafetyFilled } from '@ant-design/icons';
 
-export default function Menu({ markerList, handler }) {
+function Menu({ markerList, handler }) {
   //seach trên menu
   const [search, setSearch] = useState('');
 
@@ -43,7 +43,7 @@ export default function Menu({ markerList, handler }) {
         <ul className='menu_list'>
           {markerList.map((marker) => {
             const clickItem = () => {
-              setMarginTop('-290px');
+              setMarginTop('-315px');
               setShowInfo(true);
               setShowList(false);
               setInfo(<InfoList marker={marker} />)
@@ -65,3 +65,5 @@ export default function Menu({ markerList, handler }) {
     </div>
   )
 }
+
+export default React.memo(Menu)

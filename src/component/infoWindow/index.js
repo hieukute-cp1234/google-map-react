@@ -7,7 +7,7 @@ InfoWindow.propTypes = {
   selected: PropTypes.array
 }
 
-export default function InfoWindow(props) {
+function InfoWindow(props) {
   return (
     <>
       <div className="divTitle">
@@ -22,3 +22,5 @@ export default function InfoWindow(props) {
     </>
   )
 }
+
+export default React.memo(InfoWindow)

@@ -1,4 +1,6 @@
 import firebase from '../../firebase/config'
+import Pig from '../../component/image/lon.png'
+import Cow from '../../component/image/trau.png'
 
 let userEmail = firebase.auth().currentUser;
 if(userEmail){
@@ -29,3 +31,5 @@ export const CheckUser = (email, password) => {
     })
   return user;
 }
+
+export const iconArray = [Pig,Cow];

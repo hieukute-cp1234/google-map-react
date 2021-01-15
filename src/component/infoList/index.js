@@ -7,7 +7,7 @@ InfoList.propTypes = {
   marker: PropTypes.array,
 }
 
-export default function InfoList(props) {
+function InfoList(props) {
   return (
     <>
       <img src={props.marker.img} style={{ width: '400px', height: '220px' }} />
@@ -29,3 +29,5 @@ export default function InfoList(props) {
     </>
   )
 }
+
+export default React.memo(InfoList)

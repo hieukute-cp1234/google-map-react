@@ -6,23 +6,22 @@ Marker.propsTypes = {
   clickMarker: PropTypes.func,
 }
 
-export default function Marker(props) {
+function Marker(props) {
   const styles = {
     width: '28px',
     height: '48px',
-    margin: '-48px 0 0 -14px'
+    margin: '-60px 0 0 -13px'
   }
   return (
-    <>
-      <div className="div_image">
-        click gps
-      </div>
+    <div>
       <img
         className='image'
         style={styles}
         src={ImgMarker}
         onClick={props.clickMarker}
       />
-    </>
+    </div>
   )
 }
+
+export default React.memo(Marker)

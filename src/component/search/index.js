@@ -8,7 +8,7 @@ Search.propTypes = {
   marginTop: PropTypes.string
 }
 
-export default function Search(props) {
+function Search(props) {
   return (
     <>
       <div className='menu__search' style={{ marginTop: props.marginTop }}>
@@ -26,3 +26,5 @@ export default function Search(props) {
     </>
   )
 }
+
+export default React.memo(Search);

@@ -7,10 +7,12 @@ Eye.propTypes={
     clickEye:PropTypes.func,
 }
 
-export default function Eye(props){
+function Eye(props){
     return(
         <div className="div" onClick={props.clickEye} style={{marginLeft:props.marginLeft}}>
             {props.icon}
         </div>
     )
 }
+
+export default React.memo(Eye);

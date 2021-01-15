@@ -1,6 +1,17 @@
-.toggleButton {
+.heat_map {
 	position: absolute;
-	top: 32px;
+	top: 0px;
+	left: 600px;
+}
+
+.marker {
+	position: absolute;
+	top:0px;
+	left:700px;
+}
+
+.draw_polygon {
+	position: absolute;
+	top: 0px;
 	left: 800px;
-	z-index: 5;
 }
