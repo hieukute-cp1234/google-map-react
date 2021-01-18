@@ -10,6 +10,8 @@ function Marker(props) {
   const styles = {
     width: '28px',
     height: '48px',
+    // width: '25px',
+    // height: '25px',
     margin: '-60px 0 0 -13px'
   }
   return (

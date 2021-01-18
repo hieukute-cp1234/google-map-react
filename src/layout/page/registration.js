@@ -16,6 +16,7 @@ const formItemLayout = {
     sm: { span: 16 },
   },
 };
+
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
@@ -29,16 +30,30 @@ const tailFormItemLayout = {
   },
 };
 
-function Registration() {
+function Registration(props) {
+
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select style={{ width: 70 }}>
+        <Option value="86">+86</Option>
+      </Select>
+    </Form.Item>
+  );
+
   const history = useHistory();
 
   const [form] = Form.useForm();
 
   const onFinish = values => {
-    // confirm: "1"
-    // email: "hieu@gmail.com"
-    // nickname: "hieukute"
-    // password: "1"
+
+    //values trả về
+    var val = {
+      confirm: "1",
+      email: "hieu@gmail.com",
+      nickname: "hieukute",
+      password: "1"
+    }
+
     firebase.auth()
       .createUserWithEmailAndPassword(values.email, values.password)
       .catch(function (error) {
@@ -48,14 +63,15 @@ function Registration() {
       });
     console.log('thông tin:', values);
 
-    // let user = firebase.auth().currentUser;
-    // console.log(user);
-    // if (user != null) {
-    //   values.nickname = user.displayName;
-    //   user.providerData.forEach(function(index){
-    //     console.log('name',index.displayName);
-    //   })
-    // }
+    //cập nhập tên cho người dùng
+    let user = firebase.auth().currentUser;
+    console.log(user);
+    if (user != null) {
+      values.nickname = user.displayName;
+      user.providerData.forEach(function (index) {
+        console.log('name', index.displayName);
+      })
+    }
 
     message.success('Đăng kí thành công', 2)
     setTimeout(() => {
@@ -63,23 +79,16 @@ function Registration() {
     }, 2000)
   };
 
+  //thử
   const click = () => {
     let user = firebase.auth().currentUser;
     if (user) {
       user.updateProfile({
-        displayName:'minh',
+        displayName: 'minh',
       })
       console.log(user);
     }
   }
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-      </Select>
-    </Form.Item>
-  );
 
   return (
     <>

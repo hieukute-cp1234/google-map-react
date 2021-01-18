@@ -1,0 +1,12 @@
+.wapper {
+  width: 15px;
+  height:15px;
+  margin-top:-52px;
+  margin-left:5px;
+  background-color:rgb(8, 119, 245);
+  border:0.5px solid rgb(243, 242, 245);
+  border-radius: 50%;
+  color:white;
+  font-size: 9;
+  text-align: center;
+}

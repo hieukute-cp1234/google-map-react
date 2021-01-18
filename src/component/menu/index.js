@@ -41,12 +41,12 @@ function Menu({ markerList, handler }) {
       />
       {showList ? (
         <ul className='menu_list'>
-          {markerList.map((marker) => {
+          {markerList.map((product) => {
             const clickItem = () => {
               setMarginTop('-315px');
               setShowInfo(true);
               setShowList(false);
-              setInfo(<InfoList marker={marker} />)
+              setInfo(<InfoList marker={product} />)
             }
             return (
               <li className='menu_list-item'>
@@ -55,7 +55,7 @@ function Menu({ markerList, handler }) {
                   style={{ padding: '10px', fontSize: '16px' }}
                   onClick={clickItem}
                 >
-                  {marker.name}
+                  {product.product[0].name}/{product.product[0].amount}
                 </div>
               </li>
             )

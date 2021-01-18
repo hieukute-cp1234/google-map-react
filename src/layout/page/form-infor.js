@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState,useRef } from 'react'
+import firebase from '../../firebase/config'
 import Layout from '../component/layout'
 import { Row, Col, Input, InputNumber, Button, Form, Space, message } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import firebase from '../../firebase/config'
+import { FormInstance } from 'antd/lib/form'
 
 const layout = {
   labelCol: { span: 8 },
@@ -10,23 +11,11 @@ const layout = {
 };
 
 function FormInfor() {
-
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
+  const formRef = useRef(<FormInstance/>);
 
   let db = firebase.firestore();
 
-  const changeName = (e) => {
-    console.log(e.target.value);
-    setName(e.target.value);
-  }
-
-  const changeId = (e) => {
-    console.log(e.target.value);
-    setId(e.target.value);
-  }
-
-  // luu product vao state. tạo state = [].
+  // data fake
   var docData = {
     stringExample: "Hello world!",
     booleanExample: true,
@@ -44,12 +33,12 @@ function FormInfor() {
 
   const onFinish = values => {
     console.log(values)
-    db.collection(name)
-      .doc(id).set(
+    db.collection(values.name)
+      .doc(values.id).set(
         {
           lat: values.lat,
           lng: values.lng,
-          icon: db.collection('Icon').set()
+          //icon: db.collection('Icon').set(),
           product: values.product,
         }
       )
@@ -62,6 +51,7 @@ function FormInfor() {
         message.success('Lưu thất bại',2);
       })
     console.log(db);
+    formRef.current.resetFields();
   }
 
   return (
@@ -74,6 +64,7 @@ function FormInfor() {
               <Col span={24}>
                 <p style={{ textAlign: 'center', margin: '10px 0 10px 150px' }}>Nhập vào vị trí trại của bạn</p>
                 <Form
+                  ref={formRef}
                   onFinish={onFinish}
                   {...layout}
                   name="basic"
@@ -84,14 +75,14 @@ function FormInfor() {
                     name="name"
                     rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
                   >
-                    <Input type="text" value={name} onChange={changeName} />
+                    <Input type="text" />
                   </Form.Item>
                   <Form.Item
                     label="Cơ sở"
-                    name="nameNumber"
+                    name="id"
                     rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
                   >
-                    <Input type="text" value={id} onChange={changeId} />
+                    <Input type="text" />
                   </Form.Item>
                   <Form.Item
                     label="Vĩ độ (Lat):"

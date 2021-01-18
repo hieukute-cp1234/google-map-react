@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col,message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import firebase from '../../firebase/config';
 import { CheckUser } from '../checkUser/check'
@@ -12,8 +12,11 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function LoginFrom() {
+function LoginFrom({check,setCheck}) {
+  
+  const history = useHistory();
 
+  //lắng nghe người dùng đăng nhập
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
@@ -28,16 +31,23 @@ function LoginFrom() {
     history.push('/registration');
   }
 
-  const history = useHistory();
-
-  const onFinish = async (value) => {
+  const onFinish = (value) => {
     console.log(value);
-    const data = await CheckUser(value.email, value.password);
-    if (data === true) {
+    firebase.auth()
+    .signInWithEmailAndPassword(value.email, value.password)
+    .then(function () {
+      console.log('đăng nhập thành công!');
+      message.success('Đăng nhập thành công!',1)
       history.push('/infor');
-    } else {
-      console.log('Email hoặc Password không đúng!');
-    }
+      return true;
+    })
+    .catch(function (error) {
+      if (error) {
+        console.log(error.code, 'Email hoặc PassWord không hợp lệ!');
+        message.success('Email hoặc PassWord không hợp lệ!',3)
+        return false;
+      }
+    })
     let userEmail = firebase.auth().currentUser;
     if (userEmail) {
       console.log(userEmail.email);

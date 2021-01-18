@@ -1,15 +1,15 @@
 .divTitle {
-    width: 160px;
+    width: 210px;
     height: 110px;
     background-color: white;
     box-shadow:  0.5px 0.5px 10px #666; 
     border-radius: 7px;
-    margin:-142px 0 0 -80px;
+    margin:-150px 0 0 -104px;
 }
 
 .divTitle:after, .arrow_box:before {
-    top:-32px;
-	left: 50%;
+    top:-43px;
+	left: 1px;
 	border: solid transparent;
 	content: "";
 	position: absolute;
@@ -17,8 +17,8 @@
 }
 
 .divTitle_delete {
-    margin-left:148px;
-    font-size: 12px;
+    margin-left:198px;
+    font-size: 14px;
     color:gray;
 }
 
