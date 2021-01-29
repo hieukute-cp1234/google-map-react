@@ -19,7 +19,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined
 } from '@ant-design/icons';
-import { message, Modal, Button } from 'antd'
+import { message, Modal, Button } from 'antd' //các component cần thiết
 
 function App(props) {
 
@@ -28,19 +28,18 @@ function App(props) {
   //lưu API của google khhi render
   const [mapAPI, setMapAPI] = useState(null);
 
-  //lấy vị trí muốn lưu khi click
-  const [gps, setGps] = useState({})
-
   //draw polygon
   const [loadingPolygon, setLoadingPolygon] = useState(true);
 
+  //lấy vị trí muốn lưu khi click
+  const [gps, setGps] = useState({});
   //ẩn hiện marker
   const [checkMarker, setCheckMarker] = useState(true);
   //truyền data marker
   const [markers, setMarkers] = useState([]);
 
   //lấy thông tin người dùng nhập
-  const [data, setData] = useState([])
+  //const [data1, setData] = useState([]);
 
   //state heat map
   const [heatMapVisible, setHeatMapVisible] = useState(true);
@@ -53,7 +52,7 @@ function App(props) {
 
   //thay đổi icon khi ẩn hiện menu
   const [icon, setIcon] = useState(<CaretRightOutlined style={{ fontSize: '16px' }} />);
-  const [icon2, setIcon2] = useState(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />)
+  const [icon2, setIcon2] = useState(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />);
 
   //xét việc ẩn hiện của menu
   const [eyeSearch, setEyeSearch] = useState(false);
@@ -155,11 +154,11 @@ function App(props) {
     if (keyword) {
       let newData = data.filter((marker) => { return marker.name <= keyword });
       console.log(newData);
-      setData([...newData]);
+      //setData([...newData]);
     }
-    else setData(data);
+    //else 
+    //setData(data);
   }
-
   //menu
   const clickEyeSearch = () => {
     //ham nay xu ly giao dien khi menu an hien
@@ -167,13 +166,15 @@ function App(props) {
       setEyeSearch(false);
       setMarginLeft('0px');
       setMarginLeft2('0px');
-      setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />)
+      setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />);
+      setIcon2(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />);
     } else {
       setEyeSearch(true);
       setEyeMenu(false);
       setMarginLeft2('400px');
       setMarginLeft('400px');
-      setIcon(<CaretLeftOutlined style={{ fontSize: '16px' }} />)
+      setIcon(<CaretLeftOutlined style={{ fontSize: '16px' }} />);
+      setIcon2(<MenuFoldOutlined style={{ fontSize: '16px' }} />);
     }
   }
 
@@ -183,22 +184,26 @@ function App(props) {
       setEyeMenu(false);
       setMarginLeft2('0px');
       setMarginLeft('0px');
-      setIcon2(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />)
+      setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />);
+      setIcon2(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />);
     } else {
       setEyeMenu(true);
       setEyeSearch(false);
       setMarginLeft2('150px');
       setMarginLeft('150px');
-      setIcon2(<MenuFoldOutlined style={{ fontSize: '16px' }} />)
+      setIcon(<CaretLeftOutlined style={{ fontSize: '16px' }} />);
+      setIcon2(<MenuFoldOutlined style={{ fontSize: '16px' }} />);
     }
   }
 
-  //polygon
+  //vẽ polygon
   const drawPolygon = () => {
     setLoadingPolygon(!loadingPolygon);
     googleMapPolygon(maps, mapAPI);
+    console.log(mapAPI);
   }
 
+  //load polygon
   const googleMapPolygon = async (map, maps) => {
     const db = firebase.firestore();
     const data = await db.collection('Hust').get();
@@ -218,10 +223,36 @@ function App(props) {
       polygon.setMap(map);
     }
     message.success('Vẽ thành công!', 2);
-    console.log('vẽ thành công!')
+    console.log('vẽ thành công!');
   };
 
   //click vào map để lấy marker 
+
+  // var diem = new maps.Marker()
+
+  var Markers = (map, maps) => {
+    // const db = firebase.firestore();
+    // const data = await db.collection('Hust').get();
+    // const result = data.docs.map(doc => doc.data());
+    console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      if (data != '') {
+        let marker = new maps.Marker({
+          position: {
+            lat: data[i].lat,
+            lng: data[i].lng
+          },
+          map,
+          title: 'hello'
+        })
+        let InforMarker = new maps.InfoWindow({
+          content: data[i].name,
+        });
+        marker.addListener("click", () => { InforMarker.open(map, marker) })
+      }
+    }
+  }
+
   const clickMap = (latlng) => {
     // const newMarker = [
     //   ...markers,
@@ -235,7 +266,7 @@ function App(props) {
       setGps({
         lat: latlng.lat,
         lng: latlng.lng
-      })
+      });
       setModal(true);
       setSelected(null);
       console.log(latlng);
@@ -244,6 +275,7 @@ function App(props) {
 
   const toggleMarker = () => {
     setCheckMarker(!checkMarker);
+    Markers(maps,mapAPI)
   }
 
   //modal

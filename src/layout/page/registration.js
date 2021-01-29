@@ -186,7 +186,6 @@ function Registration(props) {
                   <Button style={{ marginLeft: '30px' }} type="primary" onClick={() => history.push('/login')}>
                     Đăng nhập
                   </Button>
-                  <Button onClick={click}>click</Button>
                 </Form.Item>
               </Form>
             </Col>

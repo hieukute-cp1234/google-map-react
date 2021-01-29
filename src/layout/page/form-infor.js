@@ -38,7 +38,6 @@ function FormInfor() {
         {
           lat: values.lat,
           lng: values.lng,
-          //icon: db.collection('Icon').set(),
           product: values.product,
         }
       )

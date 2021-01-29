@@ -1,12 +1,5 @@
 import React from 'react'
 import './search.css'
-import PropTypes from 'prop-types'
-
-Search.propTypes = {
-  search: PropTypes.string,
-  handleSearch: PropTypes.func,
-  marginTop: PropTypes.string
-}
 
 function Search(props) {
   return (
