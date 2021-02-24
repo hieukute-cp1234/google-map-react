@@ -1,11 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import '../infoList/list.css'
 import { EnvironmentOutlined, GlobalOutlined } from '@ant-design/icons'
-
-InfoList.propTypes = {
-  marker: PropTypes.array,
-}
 
 function InfoList(props) {
   return (

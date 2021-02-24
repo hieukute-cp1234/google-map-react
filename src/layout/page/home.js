@@ -2,13 +2,11 @@ import React from 'react'
 import Layout from '../component/layout'
 import Map from '../../App'
 
-function Home(){
+function Home() {
   return (
-    <>
-      <Layout>
-        <Map/> 
-      </Layout> 
-    </>
+    <Layout>
+      <Map />
+    </Layout>
   )
 }
 

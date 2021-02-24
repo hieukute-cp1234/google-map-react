@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import Infor from './page/infor'
 import Registration from './page/registration'
 import Home from './page/home'
 import FormInfor from './page/form-infor'
@@ -38,10 +39,13 @@ function AppMap() {
       <Router>
         <div>
           <Switch>
+            <Route path='/infor'>
+              <Infor/>
+            </Route>
             <Route path="/registration">
               <Registration />
             </Route>
-            <Route path="/infor">
+            <Route path="/form-infor">
               <FormInfor />
             </Route>
             <Route path="/login">

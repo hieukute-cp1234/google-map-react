@@ -47,15 +47,15 @@ function Menu({ markerList, handler }) {
               setShowInfo(true);
               setShowList(false);
               setInfo(<InfoList marker={product} />)
+              console.log()
             }
             return (
               <li className='menu_list-item'>
-                {/* <input type='checkbox' id={marker.name} onClick={check} /> */}
                 <div
                   style={{ padding: '10px', fontSize: '16px' }}
-                  onClick={clickItem}
+                  onClick={clickItem()}
                 >
-                  {product.product[0].name}/{product.product[0].amount}
+                  {product.name}/
                 </div>
               </li>
             )

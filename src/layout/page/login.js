@@ -27,10 +27,12 @@ function LoginFrom({check,setCheck}) {
     });
   })
 
+  //về trang đang kí
   const click = () => {
     history.push('/registration');
   }
 
+  // đang nhập với dữ liệu trên firebase
   const onFinish = (value) => {
     console.log(value);
     firebase.auth()

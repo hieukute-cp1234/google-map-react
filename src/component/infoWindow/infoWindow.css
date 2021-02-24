@@ -4,11 +4,11 @@
     background-color: white;
     box-shadow:  0.5px 0.5px 10px #666; 
     border-radius: 7px;
-    margin:-150px 0 0 -104px;
+    margin:-165px 0 0 -104px;
 }
 
 .divTitle:after, .arrow_box:before {
-    top:-43px;
+    top:-55px;
 	left: 1px;
 	border: solid transparent;
 	content: "";

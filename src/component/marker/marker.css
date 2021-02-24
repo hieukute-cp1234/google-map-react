@@ -1,10 +1,22 @@
-/* .div_image {
-  background-color:white;
-  width: 50px;
-  height: 30px;
-  display:none;
+.tooltiptext {
+  width: 70px;
+  background-color: rgb(252, 252, 252);
+  color: rgb(10, 10, 10);
+  text-align: center;
+  border:0.5px solid rgb(129, 127, 127);
+  border-radius:2px;
+  padding: 5px 0;
+  display: none;
+  
+  /* Position the tooltip */
+  position: absolute;
+  top: -5px;
+  left: 105%;
+
+  margin-top:-40px;
+  margin-left: 20px;
 }
 
-.image:hover {
-
-} */
+.tooltip:hover .tooltiptext {
+  display:inline-block;
+}

@@ -13,8 +13,12 @@ function InfoWindow(props) {
       <div className="divTitle">
         <div className="divTitle_delete" onClick={props.click}>x</div>
         <div style={{ paddingLeft: '10px', marginTop: '0px', fontSize: '12px', lineHeight: '0.8' }}>
-          {props.selected.product.map((item,index) =>
-            <p key={index}>Nông sản: {item.name}, Số lượng: {item.amount}</p>
+          {props.selected.product.map((item, index) => (
+            <>
+              <p key={index}>Nông sản: {item.name}</p>
+              <p key={index}>Số lượng: {item.amount}</p>
+            </>
+          )
           )}
           <p>Lat: {props.selected.lat}</p>
           <p>Lng: {props.selected.lng}</p>
