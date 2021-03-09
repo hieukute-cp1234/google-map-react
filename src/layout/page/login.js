@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col,message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import firebase from '../../firebase/config';
-import { CheckUser } from '../checkUser/check'
 
 const layout = {
   labelCol: { span: 8 },
@@ -33,20 +32,20 @@ function LoginFrom({check,setCheck}) {
   }
 
   // đang nhập với dữ liệu trên firebase
-  const onFinish = (value) => {
+   const onFinish = (value) => {
     console.log(value);
     firebase.auth()
     .signInWithEmailAndPassword(value.email, value.password)
-    .then(function () {
-      console.log('đăng nhập thành công!');
+    .then(function (user) {
+      console.log('đăng nhập thành công!',user);
       message.success('Đăng nhập thành công!',1)
-      history.push('/infor');
+      history.push('/form-infor');
       return true;
     })
     .catch(function (error) {
       if (error) {
         console.log(error.code, 'Email hoặc PassWord không hợp lệ!');
-        message.success('Email hoặc PassWord không hợp lệ!',3)
+        message.error('Email hoặc PassWord không hợp lệ!',3)
         return false;
       }
     })
@@ -98,7 +97,7 @@ function LoginFrom({check,setCheck}) {
                   <Button style={{ marginLeft: '70px' }} type="primary" htmlType="submit">
                     Đăng nhập
                   </Button>
-                  <Button type="primary" onClick={click} style={{ marginLeft: '30px' }}>
+                  <Button draggable='true' type="primary" onClick={click} style={{ marginLeft: '30px' }}>
                     Đăng kí
                   </Button>
                 </Form.Item>

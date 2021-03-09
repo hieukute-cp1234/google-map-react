@@ -5,6 +5,7 @@
     box-shadow:  0.5px 0.5px 10px #666; 
     border-radius: 7px;
     margin:-165px 0 0 -104px;
+    box-shadow: 0.5px 0.5px 10px #666;
 }
 
 .divTitle:after, .arrow_box:before {

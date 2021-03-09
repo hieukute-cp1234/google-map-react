@@ -5,10 +5,11 @@ import './App.css';
 import firebase from './firebase/config';
 import data from './data.json';//data fake
 import GoogleMapReact from 'google-map-react';
+import firebaseData from './service/firebaseAPI';
+import ImgMarker from './component/image/marker0.png'
 
 import Menu from './component/menu/index';
 import ActionClick from './component/actionClick/index';
-import InforNumberAmount from './component/inforNumberAmount/index';//chưa cần thiết
 import InfoWindow from './component/infoWindow/index';
 import Marker from './component/marker/index';
 import Eye from './component/buttoneye/eye';
@@ -19,7 +20,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined
 } from '@ant-design/icons';
-import { message, Modal, Button } from 'antd';
+import { message, Modal, Button, Input } from 'antd';
 
 function App(props) {
 
@@ -29,6 +30,7 @@ function App(props) {
   const [mapAPI, setMapAPI] = useState(null);
 
   //draw polygon
+  const [pointPolygon, setPointPolygon] = useState([])
   const [loadingPolygon, setLoadingPolygon] = useState(true);
 
   //lấy vị trí muốn lưu khi click
@@ -65,30 +67,16 @@ function App(props) {
   //lấy dữ liệu từ firebase Store
   useEffect(() => {
     const fetchData = async () => {
-      const db = firebase.firestore();
-      const data = await db.collection('Hust').get();
-      const resultData = data.docs.map(doc => doc.data());
-      console.log(resultData);
-
-      //lấy dữ liệu để seach 
-      //setData(resultData[0].product);
-      // for (let i = 0; i < resultData.length; i++) {
-      //   console.log({ lat: resultData[i].lat, lng: resultData[i].lng })
-      //   const Data=[...markers,
-      //     {
-      //       lat:resultData[i].lat,
-      //       lng:resultData[i].lng
-      //     }
-      //   ]
-      //   setMarkers(Data)
-      // }
-
-      //lấy marker
-      setMarkers(resultData);
-      return resultData;
+      try {
+        const response = await firebaseData.fetchData();
+        console.log(response)
+        setMarkers(response)
+      } catch (error) {
+        console.log('loi', error)
+      }
     }
     fetchData();
-  }, [modal == true])
+  }, [checkMarker])
 
   //load API google
   const onMap = (map, maps) => {
@@ -111,7 +99,7 @@ function App(props) {
     options: {
       radius: 20,
       opacity: 0.6
-    }
+    },
   }
 
   //ẩn hiện heatmap
@@ -119,10 +107,9 @@ function App(props) {
     setHeatMapVisible(!heatMapVisible);
     if (heatMapVisible == true) {
       const db = firebase.firestore();
-      const data = await db.collection('Hust').get();
+      const data = await db.collection('Farm').get();
       const result = data.docs.map(doc => doc.data());
       setHeatMapPoint(result);
-      setCheckMarker(false);
     } else {
       setHeatMapPoint([]);
     }
@@ -137,16 +124,16 @@ function App(props) {
   }
 
   //seach
+  const typingTimeoutRef = useRef(null);
   const handleSearch = (keyword) => {
     console.log(keyword);
-    console.log(data)
     if (keyword) {
-      let newData = data.filter((marker) => { return marker.name <= keyword });
+      let newData = markers.filter((marker) => { return marker.id = keyword });
       console.log(newData);
-      //setData([...newData]);
+      setMarkers([newData])
     }
-    //else 
-    //setData(data);
+    else
+      setMarkers(markers);
   }
 
   //menu
@@ -179,9 +166,9 @@ function App(props) {
     } else {
       setEyeMenu(true);
       setEyeSearch(false);
-      setMarginLeft2('150px');
-      setMarginLeft('150px');
-      setIcon(<CaretLeftOutlined style={{ fontSize: '16px' }} />);
+      setMarginLeft2('180px');
+      setMarginLeft('180px');
+      setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />);
       setIcon2(<MenuFoldOutlined style={{ fontSize: '16px' }} />);
     }
   }
@@ -189,18 +176,21 @@ function App(props) {
   //vẽ polygon
   const drawPolygon = () => {
     setLoadingPolygon(!loadingPolygon);
+    setCheckMarker(false)
+    console.log(loadingPolygon)
     googleMapPolygon(maps, mapAPI);
     console.log(mapAPI);
   }
 
   //load polygon
   const googleMapPolygon = async (map, maps) => {
+    setCheckMarker(false);
     const db = firebase.firestore();
-    const data = await db.collection('Hust').get();
+    const data = await db.collection('Farm').get();
     const result = data.docs.map(doc => doc.data());
     var pointPolygon = result;
     if (result == '') {
-      message.success('cần ít nhất 2 điểm!', 4);
+      message.error('cần ít nhất 2 điểm!', 4);
     } else {
       var polygon = new maps.Polygon({
         paths: pointPolygon,
@@ -211,20 +201,26 @@ function App(props) {
         fillOpacity: 0.35
       });
       polygon.setMap(map);
+      polygon.addListener('click', () => {
+        polygon.setMap(null)
+        message.success('Ẩn trang trại')
+        setTimeout(() => {
+          setCheckMarker(true)
+        },300)
+      })
+
     }
     message.success('Vẽ thành công!', 2);
-    console.log('vẽ thành công!');
   };
 
   //dung API cho marker
   var Markers = async (map, maps) => {
     setCheckMarker(!checkMarker)
     if (checkMarker === true) {
-      const db = firebase.firestore();
-      const data = await db.collection('Hust').get();
-      const result = data.docs.map(doc => doc.data());
-      setMarkers(result);
       for (let i = 0; i < markers.length; i++) {
+        const icon = {
+          url: ImgMarker,
+        }
         if (markers != '') {
           let marker = new maps.Marker({
             position: {
@@ -232,13 +228,15 @@ function App(props) {
               lng: markers[i].lng
             },
             map,
-            title: 'hello',
+            title: markers[i].id,
+            icon: icon,
+            draggable: true,
             animation: maps.Animation.DROP
           })
           let InforMarker = new maps.InfoWindow({
-            content: 'hello',
+            content: `${markers[i].id}`,
           });
-          marker.addListener("click", () => { InforMarker.open(map, marker) })
+          marker.addListener("click", () => { marker.setMap(null) })
         } else {
           message.success('Chưa có Marker!');
         }
@@ -247,7 +245,6 @@ function App(props) {
       setMarkers([])
     }
     console.log(markers);
-
   }
 
   //click lấy vị trí 
@@ -266,26 +263,21 @@ function App(props) {
   //ẩn hiện marker
   const toggleMarker = () => {
     setCheckMarker(!checkMarker);
-    //Markers(maps, mapAPI);//dung API
+    Markers(maps, mapAPI);//dung API
   }
 
   //modal lưu tọa độ
   const handleCancel = () => {
-    setModal(false);
+    setModal(null);
   }
 
   //lưu tọa độ vào fire store
   const handleSubmit = () => {
     const db = firebase.firestore();
-    db.collection('Hust').add({
+    db.collection('Farm').add({
       lat: gps.lat,
       lng: gps.lng,
-      product: [
-        {
-          name: 'chưa có',
-          amount: 0
-        }
-      ]
+      product: []
     }).then(function () {
       console.log('Lưu thành công');
     }).catch(function (e) {
@@ -316,27 +308,17 @@ function App(props) {
         onClick={clickMap}
       >
 
-
-        {checkMarker ? (markers.map((marker) => {//ẩn hiện marker
+        {/* {checkMarker ? (markers.map((marker) => {//ẩn hiện marker
           console.log(marker)
           return (<Marker
             {...{ lat: marker.lat, lng: marker.lng }}
+            title={marker}
+            draggable={true}
             clickMarker={() => {
               setSelected(marker)
-              setCenter({
-                lat: marker.lat,
-                lng: marker.lng
-              })
             }} />)
         }
-        )) : null}
-
-        {/* {checkMarker ? markers.map((gps) =>
-          <InforNumberAmount
-            {...{ lat: gps.lat, lng: gps.lng }}
-            product={gps.product}
-          />
-        ) : null} */}
+        )) : null} */}
 
         {selected ? (//ẩn hiện inforWindow
           <InfoWindow
@@ -356,7 +338,7 @@ function App(props) {
 
       {eyeSearch ? (
         <Menu
-          markerList={data}
+          markerList={markers}
           handler={handleSearch}
         />) : null}
 
@@ -374,27 +356,30 @@ function App(props) {
           polygon={drawPolygon}
         />) : null}
 
-      
       <Modal //hiện khi click lấy tọa độ
         visible={modal}
         title="Tọa độ bạn vừa chọn!"
-        footer={[
-          <Button
-            key="back"
-            onClick={handleCancel}>
-            Bỏ qua
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            loading={loadingModal}
-            onClick={handleSubmit}>
-            Lưu tọa độ
-          </Button>,
-        ]}
+        // footer={[
+        //   <Button
+        //     key="back"
+        //     onClick={handleCancel}
+        //   >
+        //     Bỏ qua
+        //   </Button>,
+        //   <Button
+        //     key="submit"
+        //     type="primary"
+        //     loading={loadingModal}
+        //     onClick={handleSubmit}
+        //   >
+        //     Lưu tọa độ
+        //   </Button>,
+        // ]}
+        onOk={handleSubmit} onCancel={handleCancel}
       >
         <p>Lat: {gps.lat}</p>
         <p>Lng: {gps.lng}</p>
+        <Input/>
       </Modal>
     </div>
   );

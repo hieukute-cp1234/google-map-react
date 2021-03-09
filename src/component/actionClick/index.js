@@ -9,7 +9,7 @@ function Action(props) {
         type="primary"
         className='button'
         onClick={props.marker}
-      >Draw Marker
+      >Hiển thị trang trại
       </Button>
       <Button
         type="primary"

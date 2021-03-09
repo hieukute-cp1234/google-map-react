@@ -10,54 +10,58 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import Context from '../context/context'
-import { CheckUser, checkLogin } from './checkUser/check'
+import firebase from '../firebase/config'
+import firebaseData from '../service/firebaseAPI'
 
 function AppMap() {
   const PrivateRouter = ({ children, ...rest }) => {
-    const isAuthenticated = checkLogin();
+    const isAuthenticated = async () => {
+      const response2 = await firebaseData.Email();
+      if(response2 != null && response2 != undefined){
+        return true
+      } else {
+        return false
+      }
+    };
 
     return (
-      <Context.Provider>
-        <Route
-          {...rest}
-          render={({ location }) =>
-            isAuthenticated ? (children) : (<Redirect
-              to={{
-                pathname: "/login",
-                state: { from: location }
-              }}
-            />)
-          }
-        />
-      </Context.Provider>
+      <Route
+        {...rest}
+        render={({ location }) =>
+          isAuthenticated ? (<Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />) : (children)
+        }
+      />
+
     )
   }
 
   return (
-    <Context.Provider>
-      <Router>
-        <div>
-          <Switch>
-            <Route path='/infor'>
-              <Infor/>
-            </Route>
-            <Route path="/registration">
-              <Registration />
-            </Route>
-            <Route path="/form-infor">
-              <FormInfor />
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-    </Context.Provider>
+    <Router>
+      <div>
+        <Switch>
+          <Route path='/infor'>
+            <Infor />
+          </Route>
+          <Route path="/registration">
+            <Registration />
+          </Route>
+          <Route path="/form-infor">
+            <FormInfor />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 

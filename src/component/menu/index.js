@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import '../menu/menu.css';
+import React, { useState,useRef } from 'react';
+import './menu.css';
 import image from '../image/kinhlup.png';
 import InfoList from '../infoList/index';
-import Search from '../search/index'
-//import { PropertySafetyFilled } from '@ant-design/icons';
+import Search from '../search/index';
+import { PropertySafetyFilled } from '@ant-design/icons';
+
 
 function Menu({ markerList, handler }) {
   //seach trên menu
@@ -21,6 +22,8 @@ function Menu({ markerList, handler }) {
   //vị trí của input seach sau khi ảnh hiển thị
   const [marginTop, setMarginTop] = useState('10px');
 
+  const typingTimeoutRef = useRef(null)
+  
   const handleSearch = (e) => {
     let value = e.target.value;
     setMarginTop('10px');
@@ -31,38 +34,40 @@ function Menu({ markerList, handler }) {
   }
 
   return (
-    <div className='menu'>
-      {showInfo ? info : null}
-      <Search
-        marginTop={marginTop}
-        search={search}
-        handleSearch={handleSearch}
-        image={image}
-      />
-      {showList ? (
-        <ul className='menu_list'>
-          {markerList.map((product) => {
-            const clickItem = () => {
-              setMarginTop('-315px');
-              setShowInfo(true);
-              setShowList(false);
-              setInfo(<InfoList marker={product} />)
-              console.log()
-            }
-            return (
-              <li className='menu_list-item'>
-                <div
-                  style={{ padding: '10px', fontSize: '16px' }}
-                  onClick={clickItem()}
-                >
-                  {product.name}/
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-    </div>
+    <>
+      <div className='menu'>
+        {showInfo ? info : null}
+        <Search
+          marginTop={marginTop}
+          search={search}
+          handleSearch={handleSearch}
+          image={image}
+        />
+        {showList ? (
+          <ul className="menu_list">
+            {markerList.map((item, index) => {
+              const clickItem = () => {
+                setMarginTop('-370px');
+                setShowInfo(true);
+                setShowList(false);
+                setInfo(<InfoList marker={item} />);
+              }
+              return (
+                <>
+                  <li
+                    className='menu_list-item'
+                    style={{ padding: '10px', fontSize: '16px' }}
+                    key={index}
+                    onClick={clickItem}
+                  >
+                    {item.id}</li>
+                </>
+              )
+            })}
+          </ul>
+        ) : null}
+      </div>
+    </>
   )
 }
 

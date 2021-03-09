@@ -33,12 +33,13 @@ function FormInfor() {
 
   const onFinish = values => {
     console.log(values)
-    db.collection(values.name)
+    db.collection('Farm')
       .doc(values.id).set(
         {
           lat: values.lat,
           lng: values.lng,
           product: values.product,
+          m2: values.m2,
         }
       )
       .then(function () {
@@ -70,18 +71,17 @@ function FormInfor() {
                   initialValues={{ remember: true }}
                 >
                   <Form.Item
-                    label="Tên trang trại"
-                    name="name"
+                    label="Tên cơ sở"
+                    name="id"
                     rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
                   >
                     <Input type="text" />
                   </Form.Item>
                   <Form.Item
-                    label="Cơ sở"
-                    name="id"
-                    rules={[{ required: true, message: 'Hãy nhập tên trang trại!' }]}
+                    label="Diện tích"
+                    name="m2"
                   >
-                    <Input type="text" />
+                    <InputNumber style={{ width: '417px' }} />
                   </Form.Item>
                   <Form.Item
                     label="Vĩ độ (Lat):"

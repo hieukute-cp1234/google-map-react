@@ -1,24 +1,33 @@
 import React from 'react'
 import '../infoList/list.css'
+import Farm from '../image/trangtrai.jpg'
 import { EnvironmentOutlined, GlobalOutlined } from '@ant-design/icons'
 
 function InfoList(props) {
   return (
     <>
-      <img src={props.marker.img} style={{ width: '400px', height: '220px' }} />
+      <img src={Farm} style={{ width: '400px', height: '220px' }} />
       <div>
-        <h1 style={{ marginLeft: '10px' }}>{props.marker.name}</h1>
+        <h1 style={{ marginLeft: '10px' }}>{props.marker.id}</h1>
         <div className="div1">
           <EnvironmentOutlined style={{ color: 'blue', fontSize: '20px' }} />
-          <p className="text">{props.marker.adress}</p>
+          {props.marker.product.map((item,index)=>
+            <>
+              <p key={index} className="text">Nông sản: {item.name}</p>
+              <p>Số lượng: {item.amount}</p>
+            </>
+          )}
         </div>
         <div className="div1">
           <GlobalOutlined style={{ color: 'blue', fontSize: '20px' }} />
           <a
             className="text"
             target="_blank"
-            href={props.marker.link}
-          >{props.marker.infor}</a>
+            href='#'
+          >{`http//${props.marker.id}.vn`}</a>
+        </div>
+        <div className="div1">
+          <p>Diện tích {props.marker.m2} m2</p>
         </div>
       </div>
     </>

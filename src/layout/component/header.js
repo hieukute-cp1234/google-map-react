@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { Link } from "react-router-dom";
 import firebase from '../../firebase/config';
-import { CheckUser } from '../checkUser/check';
 
 const { Header } = Layout
 function HeaderApp() {
