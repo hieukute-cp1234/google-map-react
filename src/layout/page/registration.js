@@ -133,7 +133,6 @@ function Registration(props) {
                       </Tooltip>
                     </span>
                   }
-                  rules={[{ required: true, message: 'Please input your nickname!', whitespace: true }]}
                 >
                   <Input />
                 </Form.Item>

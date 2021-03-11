@@ -24,6 +24,9 @@ import { message, Modal, Button, Input } from 'antd';
 
 function App(props) {
 
+  const checkUser = firebaseData.email();
+  console.log(checkUser)
+
   //lưu thành phần của googleMap khi render
   const [maps, setMaps] = useState(null);
   //lưu API của google khhi render
@@ -31,7 +34,6 @@ function App(props) {
 
   //draw polygon
   const [checkPolygon, setCheckPolygon] = useState(false);
-  const [loadingPolygon, setLoadingPolygon] = useState(true);
   const [pointPolygon, setPointPolygon] = useState([]);
 
   //lấy vị trí muốn lưu khi click
@@ -39,6 +41,8 @@ function App(props) {
 
   //ẩn hiện marker
   const [checkMarker, setCheckMarker] = useState(false);
+  const [checkSearchMarker, setCheckSearchMarker] = useState(false);
+
   //truyền data marker
   const [markers, setMarkers] = useState([]);
 
@@ -51,6 +55,7 @@ function App(props) {
   const [modal, setModal] = useState(false);
   const [modalUpdateGps, setModalUpdateGps] = useState(false);
   const [id, setId] = useState('');//lưu lại id tren firebase
+  const [modalClick, setModalClick] = useState(false);
 
   //thay đổi icon khi ẩn hiện menu
   const [icon, setIcon] = useState(<CaretRightOutlined style={{ fontSize: '16px' }} />);
@@ -66,8 +71,6 @@ function App(props) {
 
   //xét việc ẩn hiện của infoWindow
   const [selected, setSelected] = useState(null);
-
-
 
   //lấy dữ liệu từ firebase Store
   useEffect(() => {//du lieu marker
@@ -134,12 +137,14 @@ function App(props) {
   const clickEyeSearch = () => {
     //xử lý giao diện seach
     if (eyeSearch === true) {
+      setCheckSearchMarker(false)
       setEyeSearch(false);
       setMarginLeft('0px');
       setMarginLeft2('0px');
       setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />);
       setIcon2(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />);
     } else {
+      setCheckSearchMarker(true);
       setEyeSearch(true);
       setEyeMenu(false);
       setMarginLeft2('400px');
@@ -152,12 +157,14 @@ function App(props) {
   const clickEyeMenu = () => {
     //xử lý giao diện menu chức năng
     if (eyeMenu === true) {
+      setCheckSearchMarker(false);
       setEyeMenu(false);
       setMarginLeft2('0px');
       setMarginLeft('0px');
       setIcon(<CaretRightOutlined style={{ fontSize: '16px' }} />);
       setIcon2(<MenuUnfoldOutlined style={{ fontSize: '16px' }} />);
     } else {
+      setCheckSearchMarker(false);
       setEyeMenu(true);
       setEyeSearch(false);
       setMarginLeft2('180px');
@@ -169,10 +176,8 @@ function App(props) {
 
   //vẽ polygon
   const drawPolygon = () => {
-    setLoadingPolygon(!loadingPolygon);
     setCheckPolygon(true);
     setCheckMarker(false);
-    console.log(loadingPolygon)
     googleMapPolygon(maps, mapAPI);
     console.log(mapAPI);
   }
@@ -197,13 +202,12 @@ function App(props) {
       polygon.setMap(map);
       polygon.addListener('click', () => {
         polygon.setMap(null)
-        
         message.success('Ẩn trang trại')
+        setCheckPolygon(false);
         setTimeout(() => {
-          setCheckMarker(true)
-        }, 1000)
+          setCheckMarker2(true)
+        }, 300)
       })
-      setCheckPolygon(false)
       message.success('Vẽ thành công!', 2);
     }
   };
@@ -231,15 +235,20 @@ function App(props) {
           content: `${markers[i].id}`,
         });
 
-        marker.addListener("click", () => {
-          marker.addListener("click",()=>{InforMarker.open(map,marker)})
-        })
-
+        marker.addListener("click", () => { 
+          marker.setMap(null)
+          setCheckMarker2(false)
+          setCheckMarker(false)
+          setTimeout(() => {
+            setCheckMarker2(true)
+          },300)
+         })
         marker.addListener('drag', () => {
+          setCheckMarker2(false)
+          setCheckMarker(true)
           console.log(markers[i].id)
           setId(markers[i].id)
         })
-
       } else {
         message.success('Chưa có Marker!');
       }
@@ -247,6 +256,7 @@ function App(props) {
     console.log(markers);
   }
 
+  const [checkMarker2,setCheckMarker2] = useState(false)
   //click lấy vị trí 
   const clickMap = (latlng) => {
     setGps({
@@ -257,18 +267,23 @@ function App(props) {
     if (checkPolygon === true && selected == null) {
       setModal(true);
       setSelected(null);
-    } else { 
+    } else {
       setModal(false);
     }
 
     if (checkMarker === true) {
       setModalUpdateGps(true);
+    } 
+    
+    if(checkMarker2 === true){
+      setModalClick(true);
     }
   }
 
   //ẩn hiện marker
   const toggleMarker = () => {
-    setCheckMarker(true);
+    setCheckMarker2(true)
+    setCheckMarker(false);
     setCheckPolygon(false);
     Markers(maps, mapAPI);//dung API
   }
@@ -276,10 +291,13 @@ function App(props) {
   //modal lưu tọa độ vaof firebase
   const handleCancel = () => {
     setModal(null);
+    setModalClick(null);
   }
 
   const handleCancel2 = () => {
     setModalUpdateGps(false);
+    setCheckMarker2(true)
+    setCheckMarker(false)
   }
 
   const handleSubmit2 = () => {//modal cho thay doi latlng farm
@@ -290,6 +308,33 @@ function App(props) {
     })
     setModalUpdateGps(false);
     message.success('Cập nhật thành công!')
+    setCheckMarker2(true)
+    setCheckMarker(false)
+  }
+
+  const handleSubmit3 = () => {
+    const db = firebase.firestore();
+    db.collection('Farm')
+      .doc(changeId).set(
+        {
+          lat: gps.lat,
+          lng: gps.lng,
+          product:[
+            {
+              name:'khong co',
+              amount:'khong co'
+            }
+          ],
+          m2:null
+        }
+      )
+      .then(function () {
+        message.success('Lưu thành công', 2);
+      })
+      .catch(function (e) {
+        message.error('Lưu thất bại', 2);
+      })
+      setModalClick(false)
   }
 
   const handleSubmit = () => {//modal cua polygon
@@ -299,11 +344,37 @@ function App(props) {
       lng: gps.lng
     }).then(function () {
       console.log('Lưu thành công');
+      message.success('Lưu thành công!', 2);
     }).catch(function (e) {
       console.log('Không thể lưu', e);
+      message.error('Lưu thất bại', 2)
     })
     setModal(false);
-    message.success('Lưu thành công!', 2);
+    
+  }
+
+  //search
+  const [search, setSearch] = useState('')
+  let listItem = []
+  if (search.length > 0) {
+    markers.forEach((item) => {
+      if (String(item.id).toLowerCase().indexOf(search) != -1) {
+        listItem.push(item);
+      }
+    })
+  } else {
+    listItem = markers
+  }
+  console.log(listItem)
+  const handleSearch = (key) => {
+    setSearch(key);
+  }
+
+  const [changeId, setChangeId] = useState('')
+
+  const change = (e) => {
+    let val = e.target.value
+    setChangeId(val)
   }
 
   return (
@@ -323,23 +394,34 @@ function App(props) {
         onClick={clickMap}
       >
 
-        {checkPolygon ? (pointPolygon.map((marker) => {//ẩn hiện marker polygon
-          console.log(marker)
-          return (<Marker
-            {...{ lat: marker.lat, lng: marker.lng }}
-            title={marker}
-            clickMarker={() => {
-              setSelected(marker)
-            }} />)
-        }
-        )) : null}
+        {checkPolygon ? (
+          pointPolygon.map((marker) => {//ẩn hiện marker polygon
+            console.log(marker)
+            return (<Marker
+              {...{ lat: marker.lat, lng: marker.lng }}
+              title={marker}
+            />)
+          }
+          )) : null}
 
-        {/* {selected ? (//ẩn hiện inforWindow
+        {checkSearchMarker ? (
+          listItem.map((marker) => {//ẩn hiện marker polygon
+            console.log(marker)
+            return (<Marker
+              {...{ lat: marker.lat, lng: marker.lng }}
+              title={marker}
+              clickMarker={() => {
+                setSelected(marker)
+              }} />)
+          }
+          )) : null}
+
+        {selected ? (//ẩn hiện inforWindow
           <InfoWindow
             {...{ lat: selected.lat, lng: selected.lng }}
             selected={selected}
             click={() => { setSelected(null) }} />
-        ) : null} */}
+        ) : null}
 
       </GoogleMapReact>
 
@@ -352,15 +434,19 @@ function App(props) {
 
       {eyeSearch ? (
         <Menu
-          markerList={markers}
+          markerList={listItem}
+          handle={handleSearch}
         />) : null}
 
-      <Eye //menu chức năng
-        marginTop={'65px'}
-        clickEye={clickEyeMenu}
-        icon={icon2}
-        marginLeft={marginLeft2}
-      />
+      {checkUser ? (
+        <Eye //menu chức năng
+          marginTop={'65px'}
+          clickEye={clickEyeMenu}
+          icon={icon2}
+          marginLeft={marginLeft2}
+        />
+      ) : null}
+
 
       {eyeMenu ? (
         <ActionClick
@@ -391,6 +477,19 @@ function App(props) {
       >
         <p>Lat: {gps.lat}</p>
         <p>Lng: {gps.lng}</p>
+      </Modal>
+
+      <Modal
+        visible={modalClick}
+        onOk={handleSubmit3}
+        onCancel={handleCancel}
+        okText="Lưu"
+        cancelText="Bỏ qua"
+      >
+        <p>Lat: {gps.lat}</p>
+        <p>Lng: {gps.lng}</p>
+        <p>Tên trang trại</p>
+        <Input onChange={change}></Input>
       </Modal>
     </div>
   );

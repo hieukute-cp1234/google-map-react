@@ -12,9 +12,9 @@ function Marker(props) {
   const arrMarker = [marker0, marker1, marker2, marker3];//chua dung
 
   const styleImage = {
-    width: '14px',
-    height: '24px',
-    margin: '-35px 0 0 -7px'
+    width: '28px',
+    height: '48px',
+    margin: '-61px 0 0 -14px'
   }
   return (
     <div class="tooltip" draggable='true'>

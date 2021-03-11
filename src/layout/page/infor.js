@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../component/layout'
 import { HomeFilled, DeleteFilled, EditFilled, CompassOutlined } from '@ant-design/icons'
-import { Row, Col, Input, Form, Space, Collapse, InputNumber, Button, message  } from 'antd'
+import { Row, Col, Input, Form, Collapse, InputNumber, Button, message  } from 'antd'
 import firebaseData from '../../service/firebaseAPI'
 import firebase from '../../firebase/config'
 
@@ -16,7 +16,6 @@ const Product = (props) => {//component nay de goi vao component Infor been duoi
   const updateProduct = (name) => {
     setCheck(!check);
     console.log(name);
-    setNameProduct(name);
   }
 
   const deleteProduct = (item) => {//dang loi
@@ -40,7 +39,7 @@ const Product = (props) => {//component nay de goi vao component Infor been duoi
     db.collection('Farm').doc(props.farm).update({
       product: [
         {
-          name: nameProduct,
+          name: value.name,
           amount: value.amount
         }
       ]
@@ -60,19 +59,18 @@ const Product = (props) => {//component nay de goi vao component Infor been duoi
     <>
       {props.product.map((item, index) => (
         <Row>
-          <Col span={12} offset={2} style={{ display: 'flex' }}>
-            <HomeFilled style={{ fontSize: '16px' }} />
+          <Col span={12} offset={2}>
             {check ? (
               <>
                 <p style={{
                   marginTop: '-2px',
                   marginLeft: '20px'
-                }} >{item.name}</p>
+                }} >Nông sản: {item.name}</p>
                 <br />
                 <p style={{
                   marginTop: '-2px',
                   marginLeft: '20px'
-                }}>{item.amount}</p>
+                }}>Số Lượng: {item.amount}</p>
               </>
             ) : (
               <Form onFinish={submit}>
@@ -148,14 +146,12 @@ const Infor = () => {
       }
     }
     fetchData();
-  }, [])
+  })
 
   const click1 = (index) => {
     setCheck1(!check1);
     console.log(index);
   }
-
-
 
   return (
     <Layout>
@@ -215,7 +211,7 @@ const Infor = () => {
                               <Form.Item name='m2'>
                                 <Input
                                   style={{
-                                    backgroundColor: '#f0f2f5',
+                                    backgroundColor: '#FAFAFA',
                                     border: 'none',
                                     marginTop: '-5px',
                                     marginLeft: '10px'

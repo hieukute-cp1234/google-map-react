@@ -15,13 +15,13 @@ function Action(props) {
         type="primary"
         className='button'
         onClick={props.heatmap}
-      >Heat Map
+      >Bản đồ nhiệt
       </Button>
       <Button
         type="primary"
         className='button'
         onClick={props.polygon}
-      >Draw Polygon
+      >Vẽ trang trại
       </Button>
     </div>
   )

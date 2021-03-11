@@ -15,17 +15,14 @@
 }
 
 .menu_list {
-  margin-top: 10px;
+  margin-top: 20px;
   list-style: none;
 }
 
 .menu_list-item {
   display:flex;
+  width: 100%;
 }
-
-/* .menu_list:hover {
-  background-color: rgb(216, 211, 211);
-} */
 
 .menu_list-item:hover {
   background-color: rgb(216, 211, 211);

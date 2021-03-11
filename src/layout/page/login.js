@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col,message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import firebase from '../../firebase/config';
+import firebaseData from '../../service/firebaseAPI';
 
 const layout = {
   labelCol: { span: 8 },
@@ -11,7 +12,7 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function LoginFrom({check,setCheck}) {
+function LoginFrom() {
   
   const history = useHistory();
 

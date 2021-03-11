@@ -9,7 +9,7 @@ function Search(props) {
           value={props.search}
           className='menu__search-input'
           type="text"
-          placeholder="Tìm kiếm trên Google Map React..."
+          placeholder="Nhập tên trang trại cần tìm..."
           onChange={props.handleSearch}
         />
         <button className='menu__search-button'>

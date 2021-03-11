@@ -10,30 +10,21 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import firebase from '../firebase/config'
 import firebaseData from '../service/firebaseAPI'
 
 function AppMap() {
   const PrivateRouter = ({ children, ...rest }) => {
-    const isAuthenticated = async () => {
-      const response2 = await firebaseData.Email();
-      if(response2 != null && response2 != undefined){
-        return true
-      } else {
-        return false
-      }
-    };
-
+    const isAuthenticated = firebaseData.email();
     return (
       <Route
         {...rest}
         render={({ location }) =>
-          isAuthenticated ? (<Redirect
+          isAuthenticated ? (children) : (<Redirect
             to={{
               pathname: "/login",
               state: { from: location }
             }}
-          />) : (children)
+          />)
         }
       />
 
@@ -44,15 +35,15 @@ function AppMap() {
     <Router>
       <div>
         <Switch>
-          <Route path='/infor'>
+          <PrivateRouter path='/infor'>
             <Infor />
-          </Route>
+          </PrivateRouter>
           <Route path="/registration">
             <Registration />
           </Route>
-          <Route path="/form-infor">
+          <PrivateRouter path="/form-infor">
             <FormInfor />
-          </Route>
+          </PrivateRouter>
           <Route path="/login">
             <Login />
           </Route>
