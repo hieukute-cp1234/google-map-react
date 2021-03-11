@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import './menu.css';
 import image from '../image/kinhlup.png';
 import InfoList from '../infoList/index';
@@ -22,16 +22,37 @@ function Menu({ markerList, handler }) {
   //vị trí của input seach sau khi ảnh hiển thị
   const [marginTop, setMarginTop] = useState('10px');
 
-  const typingTimeoutRef = useRef(null)
-  
+  let listItem = [];
+
+  if (search.length > 0) {
+    markerList.forEach((item) => {
+      if (String(item.id).toLowerCase().indexOf(search) != -1) {
+        listItem.push(item);
+      }
+    })
+  } else {
+    listItem = markerList
+  }
+
+  // if(search.length > 0){
+  //   let newData = markerList.filter((item)=>{return search == item.id})
+  //   console.log(newData)
+  // }else {
+  //   listItem = markerList
+  // }
+
+  console.log(listItem)
   const handleSearch = (e) => {
     let value = e.target.value;
+    console.log(value)
     setMarginTop('10px');
     setShowList(true);
     setShowInfo(false);
     setSearch(value);
-    handler(search);
+    //handler(search);
   }
+
+
 
   return (
     <>
@@ -45,7 +66,7 @@ function Menu({ markerList, handler }) {
         />
         {showList ? (
           <ul className="menu_list">
-            {markerList.map((item, index) => {
+            {listItem.map((item, index) => {
               const clickItem = () => {
                 setMarginTop('-370px');
                 setShowInfo(true);

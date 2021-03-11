@@ -6,7 +6,7 @@ import firebase from './firebase/config';
 import data from './data.json';//data fake
 import GoogleMapReact from 'google-map-react';
 import firebaseData from './service/firebaseAPI';
-import ImgMarker from './component/image/marker0.png'
+import ImgMarker from './component/image/marker0.png';
 
 import Menu from './component/menu/index';
 import ActionClick from './component/actionClick/index';
@@ -30,13 +30,14 @@ function App(props) {
   const [mapAPI, setMapAPI] = useState(null);
 
   //draw polygon
-  const [pointPolygon, setPointPolygon] = useState([])
+  const [checkPolygon, setCheckPolygon] = useState(false);
   const [loadingPolygon, setLoadingPolygon] = useState(true);
+  const [pointPolygon, setPointPolygon] = useState([]);
 
   //lấy vị trí muốn lưu khi click
   const [gps, setGps] = useState({});
   //ẩn hiện marker
-  const [checkMarker, setCheckMarker] = useState(true);
+  const [checkMarker, setCheckMarker] = useState(false);
   //truyền data marker
   const [markers, setMarkers] = useState([]);
 
@@ -48,6 +49,8 @@ function App(props) {
   //modal lưu tọa độ
   const [loadingModal, setLoadingModal] = useState(false);
   const [modal, setModal] = useState(false);
+  const [modalUpdateGps, setModalUpdateGps] = useState(false);
+  const [id, setId] = useState('')
 
   //thay đổi icon khi ẩn hiện menu
   const [icon, setIcon] = useState(<CaretRightOutlined style={{ fontSize: '16px' }} />);
@@ -64,6 +67,8 @@ function App(props) {
   //xét việc ẩn hiện của infoWindow
   const [selected, setSelected] = useState(null);
 
+
+
   //lấy dữ liệu từ firebase Store
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +82,16 @@ function App(props) {
     }
     fetchData();
   }, [checkMarker])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = firebase.firestore();
+      const data = await db.collection('Polygon').get();
+      const result = data.docs.map(doc => doc.data());
+      setPointPolygon(result)
+    }
+    fetchData()
+  }, [modal])
 
   //load API google
   const onMap = (map, maps) => {
@@ -124,17 +139,18 @@ function App(props) {
   }
 
   //seach
+  const [listItem,setListItem] = useState([])
   const typingTimeoutRef = useRef(null);
-  const handleSearch = (keyword) => {
-    console.log(keyword);
-    if (keyword) {
-      let newData = markers.filter((marker) => { return marker.id = keyword });
-      console.log(newData);
-      setMarkers([newData])
-    }
-    else
-      setMarkers(markers);
-  }
+  // const handleSearch = (keyword) => {
+  //   console.log(keyword);
+  //   if (keyword) {
+  //     let newData = markers.filter((marker) => { return marker.id = keyword });
+  //     console.log(newData);
+  //     setMarkers([newData])
+  //   }
+  //   else
+  //     setMarkers(markers);
+  // }
 
   //menu
   const clickEyeSearch = () => {
@@ -176,7 +192,8 @@ function App(props) {
   //vẽ polygon
   const drawPolygon = () => {
     setLoadingPolygon(!loadingPolygon);
-    setCheckMarker(false)
+    setCheckPolygon(true);
+    setCheckMarker(false);
     console.log(loadingPolygon)
     googleMapPolygon(maps, mapAPI);
     console.log(mapAPI);
@@ -184,13 +201,12 @@ function App(props) {
 
   //load polygon
   const googleMapPolygon = async (map, maps) => {
-    setCheckMarker(false);
     const db = firebase.firestore();
-    const data = await db.collection('Farm').get();
+    const data = await db.collection('Polygon').get();
     const result = data.docs.map(doc => doc.data());
     var pointPolygon = result;
     if (result == '') {
-      message.error('cần ít nhất 2 điểm!', 4);
+      message.error('cần ít nhất 3 điểm!', 4);
     } else {
       var polygon = new maps.Polygon({
         paths: pointPolygon,
@@ -198,71 +214,84 @@ function App(props) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: "#FF0000",
-        fillOpacity: 0.35
+        fillOpacity: 0.35,
       });
       polygon.setMap(map);
       polygon.addListener('click', () => {
         polygon.setMap(null)
+        
         message.success('Ẩn trang trại')
         setTimeout(() => {
           setCheckMarker(true)
-        },300)
+        }, 1000)
       })
-
+      setCheckPolygon(false)
+      message.success('Vẽ thành công!', 2);
     }
-    message.success('Vẽ thành công!', 2);
   };
 
   //dung API cho marker
   var Markers = async (map, maps) => {
-    setCheckMarker(!checkMarker)
-    if (checkMarker === true) {
-      for (let i = 0; i < markers.length; i++) {
-        const icon = {
-          url: ImgMarker,
-        }
-        if (markers != '') {
-          let marker = new maps.Marker({
-            position: {
-              lat: markers[i].lat,
-              lng: markers[i].lng
-            },
-            map,
-            title: markers[i].id,
-            icon: icon,
-            draggable: true,
-            animation: maps.Animation.DROP
-          })
-          let InforMarker = new maps.InfoWindow({
-            content: `${markers[i].id}`,
-          });
-          marker.addListener("click", () => { marker.setMap(null) })
-        } else {
-          message.success('Chưa có Marker!');
-        }
+    for (let i = 0; i < markers.length; i++) {
+      const icon = {
+        url: ImgMarker,
       }
-    } else {
-      setMarkers([])
+      if (markers != '') {
+        let marker = new maps.Marker({
+          position: {
+            lat: markers[i].lat,
+            lng: markers[i].lng
+          },
+          map,
+          title: markers[i].id,
+          icon: icon,
+          draggable: true,
+          animation: maps.Animation.DROP
+        })
+
+        let InforMarker = new maps.InfoWindow({
+          content: `${markers[i].id}`,
+        });
+
+        marker.addListener("click", () => {
+          marker.addListener("click",()=>{InforMarker.open(map,marker)})
+        })
+
+        marker.addListener('drag', () => {
+          console.log(markers[i].id)
+          setId(markers[i].id)
+        })
+
+      } else {
+        message.success('Chưa có Marker!');
+      }
     }
     console.log(markers);
   }
 
   //click lấy vị trí 
   const clickMap = (latlng) => {
-    if (checkMarker == true && selected == null) {
-      setGps({
-        lat: latlng.lat,
-        lng: latlng.lng
-      });
+    setGps({
+      lat: latlng.lat,
+      lng: latlng.lng
+    });
+    console.log(latlng)
+    if (checkPolygon === true && selected == null) {
       setModal(true);
       setSelected(null);
-      console.log(latlng);
+    } else { 
+      setModal(false);
+    }
+
+    if (checkMarker === true) {
+      setModalUpdateGps(true);
     }
   }
 
   //ẩn hiện marker
   const toggleMarker = () => {
-    setCheckMarker(!checkMarker);
+    setCheckMarker(true);
+    setCheckPolygon(false);
     Markers(maps, mapAPI);//dung API
   }
 
@@ -271,24 +300,33 @@ function App(props) {
     setModal(null);
   }
 
+  const handleCancel2 = () => {
+    setModalUpdateGps(false);
+  }
+
+  const handleSubmit2 = () => {
+    const db = firebase.firestore();
+    db.collection('Farm').doc(id).update({
+      lat: gps.lat,
+      lng: gps.lng
+    })
+    setModalUpdateGps(false);
+    message.success('Cập nhật thành công!')
+  }
+
   //lưu tọa độ vào fire store
   const handleSubmit = () => {
     const db = firebase.firestore();
-    db.collection('Farm').add({
+    db.collection('Polygon').add({
       lat: gps.lat,
-      lng: gps.lng,
-      product: []
+      lng: gps.lng
     }).then(function () {
       console.log('Lưu thành công');
     }).catch(function (e) {
       console.log('Không thể lưu', e);
     })
-    setLoadingModal(true);
-    setTimeout(() => {
-      setLoadingModal(false);
-      setModal(false);
-      message.success('Lưu thành công!', 2);
-    }, 2000)
+    setModal(false);
+    message.success('Lưu thành công!', 2);
   }
 
   return (
@@ -308,24 +346,23 @@ function App(props) {
         onClick={clickMap}
       >
 
-        {/* {checkMarker ? (markers.map((marker) => {//ẩn hiện marker
+        {checkPolygon ? (pointPolygon.map((marker) => {//ẩn hiện marker
           console.log(marker)
           return (<Marker
             {...{ lat: marker.lat, lng: marker.lng }}
             title={marker}
-            draggable={true}
             clickMarker={() => {
               setSelected(marker)
             }} />)
         }
-        )) : null} */}
+        )) : null}
 
-        {selected ? (//ẩn hiện inforWindow
+        {/* {selected ? (//ẩn hiện inforWindow
           <InfoWindow
             {...{ lat: selected.lat, lng: selected.lng }}
             selected={selected}
             click={() => { setSelected(null) }} />
-        ) : null}
+        ) : null} */}
 
       </GoogleMapReact>
 
@@ -339,7 +376,7 @@ function App(props) {
       {eyeSearch ? (
         <Menu
           markerList={markers}
-          handler={handleSearch}
+          //handler={handleSearch}
         />) : null}
 
       <Eye //menu chức năng
@@ -359,27 +396,24 @@ function App(props) {
       <Modal //hiện khi click lấy tọa độ
         visible={modal}
         title="Tọa độ bạn vừa chọn!"
-        // footer={[
-        //   <Button
-        //     key="back"
-        //     onClick={handleCancel}
-        //   >
-        //     Bỏ qua
-        //   </Button>,
-        //   <Button
-        //     key="submit"
-        //     type="primary"
-        //     loading={loadingModal}
-        //     onClick={handleSubmit}
-        //   >
-        //     Lưu tọa độ
-        //   </Button>,
-        // ]}
-        onOk={handleSubmit} onCancel={handleCancel}
+        okText="Lưu"
+        cancelText="Bỏ qua"
+        onOk={handleSubmit}
+        onCancel={handleCancel}
       >
         <p>Lat: {gps.lat}</p>
         <p>Lng: {gps.lng}</p>
-        <Input/>
+      </Modal>
+      <Modal
+        visible={modalUpdateGps}
+        title="Tọa độ mới"
+        onOk={handleSubmit2}
+        onCancel={handleCancel2}
+        okText="Lưu"
+        cancelText="Bỏ qua"
+      >
+        <p>Lat: {gps.lat}</p>
+        <p>Lng: {gps.lng}</p>
       </Modal>
     </div>
   );

@@ -1,39 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../component/layout'
-import { HomeFilled, DeleteFilled, EditFilled } from '@ant-design/icons'
-import { Row, Col, Input, Form, Space, Collapse, InputNumber, Button } from 'antd'
+import { HomeFilled, DeleteFilled, EditFilled, CompassOutlined } from '@ant-design/icons'
+import { Row, Col, Input, Form, Space, Collapse, InputNumber, Button, message  } from 'antd'
 import firebaseData from '../../service/firebaseAPI'
 import firebase from '../../firebase/config'
 
 const Product = (props) => {
   const [check, setCheck] = useState(true);
+  const [nameProduct, setNameProduct] = useState('');
 
-  const updateProduct = (index) => {
-    setCheck(false);
-    console.log(index);
+  const updateProduct = (name) => {
+    setCheck(!check);
+    console.log(name);
+    setNameProduct(name);
   }
 
   const deleteProduct = (item) => {
-
+    const db = firebase.firestore();
+    db.collection('Farm').doc(props.farm).update({
+      product: [
+        item
+      ]
+    })
+      .then(function () {
+        console.log('xoa thanh cong')
+      })
+      .catch(function (error) {
+        console.log('xoa that bai', error)
+      });
+    console.log(item)
   }
 
   const submit = (value) => {
     const db = firebase.firestore();
     db.collection('Farm').doc(props.farm).update({
-      product:[
-        { 
-          name:value.name,
+      product: [
+        {
+          name: nameProduct,
           amount: value.amount
         }
       ]
     })
-    .then(function(){
-      console.log('thanh cong')
-    })
-    .catch(function(e){
-      console.log('that bai',e)
-    })
+      .then(function () {
+        console.log('thanh cong')
+      })
+      .catch(function (e) {
+        console.log('that bai', e)
+      })
     console.log(value);
+    setCheck(true);
+    message.success('Sửa thành công')
   }
 
   return (
@@ -56,7 +72,7 @@ const Product = (props) => {
               </>
             ) : (
               <Form onFinish={submit}>
-                <Form.Item  name="name">
+                <Form.Item name="name">
                   <Input
                     style={{
                       backgroundColor: '#FAFAFA',
@@ -67,7 +83,7 @@ const Product = (props) => {
                     defaultValue={item.name}
                   />
                 </Form.Item>
-                <Form.Item  name="amount">
+                <Form.Item name="amount">
                   <InputNumber
                     style={{
                       backgroundColor: '#FAFAFA',
@@ -92,7 +108,7 @@ const Product = (props) => {
           <Col span={6} offset={2}>
             <EditFilled
               title='Sửa'
-              onClick={() => updateProduct(props.product.name)}
+              onClick={() => updateProduct(item.name)}
             />
             <DeleteFilled
               style={{ marginLeft: '10px' }}
@@ -128,15 +144,12 @@ const Infor = () => {
   }, [])
 
   const click1 = (index) => {
-    setCheck1(false);
+    setCheck1(!check1);
     console.log(index);
   }
 
-  const submit = (e) => {
-    console.log(e);
-  }
 
-  const [icon, setIcon] = useState(<DeleteFilled />)
+
   return (
     <Layout>
       <Row>
@@ -149,10 +162,6 @@ const Infor = () => {
             className="site-collapse-custom-collapse"
           >
             {data.map((item, index) => {
-              const daleteItemProduct = () => {
-
-              }
-
               const deleteItemId = (e) => {
                 console.log(item.id)
                 const db = firebase.firestore();
@@ -165,6 +174,15 @@ const Infor = () => {
                   });
                 data.splice(index, 1)
                 setData([...data])
+              }
+
+              const submit = (e) => {
+                setCheck1(true);
+                const db = firebase.firestore();
+                db.collection('Farm').doc(item.id).update({
+                  m2:e.m2
+                })
+                console.log(e);
               }
               return (
                 <Panel
@@ -179,15 +197,15 @@ const Infor = () => {
                     <Form.Item key={index} sytle={{ display: 'flex' }}>
                       <Row>
                         <Col span={12} offset={2} style={{ display: 'flex' }}>
-                          <HomeFilled style={{ fontSize: '16px' }} />
+                        <CompassOutlined style={{ fontSize: '16px' }}/>
                           {check1 ? (
                             <p style={{
                               marginTop: '-2px',
                               marginLeft: '20px'
                             }}>Diện tích: {item.m2} m2</p>
                           ) : (
-                            <Form>
-                              <Form.Item>
+                            <Form onFinish={submit}>
+                              <Form.Item name='m2'>
                                 <Input
                                   style={{
                                     backgroundColor: '#f0f2f5',
@@ -197,6 +215,9 @@ const Infor = () => {
                                   }}
                                   defaultValue={item.m2}
                                 />
+                              </Form.Item>
+                              <Form.Item>
+                                <Button type="primary" htmlType="submit">Sửa</Button>
                               </Form.Item>
                             </Form>
                           )}

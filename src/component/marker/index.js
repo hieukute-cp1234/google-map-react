@@ -11,9 +11,9 @@ function Marker(props) {
   const arrMarker = [marker0, marker1, marker2, marker3];
 
   const styleImage = {
-    width: '28px',
-    height: '48px',
-    margin: '-61px 0 0 -14px'
+    width: '14px',
+    height: '24px',
+    margin: '-35px 0 0 -7px'
   }
   return (
     <div class="tooltip" draggable='true'>
@@ -22,7 +22,7 @@ function Marker(props) {
         src={marker0}
         onClick={props.clickMarker}
       />
-      <div class="tooltiptext">{props.title.id}</div>
+      {/* <div class="tooltiptext">{props.title.id}</div> */}
     </div>
   )
 }
