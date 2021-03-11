@@ -36,6 +36,7 @@ function App(props) {
 
   //lấy vị trí muốn lưu khi click
   const [gps, setGps] = useState({});
+
   //ẩn hiện marker
   const [checkMarker, setCheckMarker] = useState(false);
   //truyền data marker
@@ -47,10 +48,9 @@ function App(props) {
   const [heatMapPoint, setHeatMapPoint] = useState([]);
 
   //modal lưu tọa độ
-  const [loadingModal, setLoadingModal] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalUpdateGps, setModalUpdateGps] = useState(false);
-  const [id, setId] = useState('')
+  const [id, setId] = useState('');//lưu lại id tren firebase
 
   //thay đổi icon khi ẩn hiện menu
   const [icon, setIcon] = useState(<CaretRightOutlined style={{ fontSize: '16px' }} />);
@@ -70,7 +70,7 @@ function App(props) {
 
 
   //lấy dữ liệu từ firebase Store
-  useEffect(() => {
+  useEffect(() => {//du lieu marker
     const fetchData = async () => {
       try {
         const response = await firebaseData.fetchData();
@@ -83,7 +83,7 @@ function App(props) {
     fetchData();
   }, [checkMarker])
 
-  useEffect(() => {
+  useEffect(() => {//du lieu polygon
     const fetchData = async () => {
       const db = firebase.firestore();
       const data = await db.collection('Polygon').get();
@@ -129,28 +129,6 @@ function App(props) {
       setHeatMapPoint([]);
     }
   }
-
-  //click đưa ra heatmap(chưa dùng)
-  const onClickMap = ({ x, y, lat, lng, e }) => {
-    console.log('onclickmap')
-    setHeatMapPoint([
-      ...heatMapPoint, { lat, lng }
-    ]);
-  }
-
-  //seach
-  const [listItem,setListItem] = useState([])
-  const typingTimeoutRef = useRef(null);
-  // const handleSearch = (keyword) => {
-  //   console.log(keyword);
-  //   if (keyword) {
-  //     let newData = markers.filter((marker) => { return marker.id = keyword });
-  //     console.log(newData);
-  //     setMarkers([newData])
-  //   }
-  //   else
-  //     setMarkers(markers);
-  // }
 
   //menu
   const clickEyeSearch = () => {
@@ -295,7 +273,7 @@ function App(props) {
     Markers(maps, mapAPI);//dung API
   }
 
-  //modal lưu tọa độ
+  //modal lưu tọa độ vaof firebase
   const handleCancel = () => {
     setModal(null);
   }
@@ -304,7 +282,7 @@ function App(props) {
     setModalUpdateGps(false);
   }
 
-  const handleSubmit2 = () => {
+  const handleSubmit2 = () => {//modal cho thay doi latlng farm
     const db = firebase.firestore();
     db.collection('Farm').doc(id).update({
       lat: gps.lat,
@@ -314,8 +292,7 @@ function App(props) {
     message.success('Cập nhật thành công!')
   }
 
-  //lưu tọa độ vào fire store
-  const handleSubmit = () => {
+  const handleSubmit = () => {//modal cua polygon
     const db = firebase.firestore();
     db.collection('Polygon').add({
       lat: gps.lat,
@@ -346,7 +323,7 @@ function App(props) {
         onClick={clickMap}
       >
 
-        {checkPolygon ? (pointPolygon.map((marker) => {//ẩn hiện marker
+        {checkPolygon ? (pointPolygon.map((marker) => {//ẩn hiện marker polygon
           console.log(marker)
           return (<Marker
             {...{ lat: marker.lat, lng: marker.lng }}
@@ -376,7 +353,6 @@ function App(props) {
       {eyeSearch ? (
         <Menu
           markerList={markers}
-          //handler={handleSearch}
         />) : null}
 
       <Eye //menu chức năng
@@ -393,7 +369,7 @@ function App(props) {
           polygon={drawPolygon}
         />) : null}
 
-      <Modal //hiện khi click lấy tọa độ
+      <Modal //hiện khi click lấy tọa độ polygon
         visible={modal}
         title="Tọa độ bạn vừa chọn!"
         okText="Lưu"
@@ -404,7 +380,8 @@ function App(props) {
         <p>Lat: {gps.lat}</p>
         <p>Lng: {gps.lng}</p>
       </Modal>
-      <Modal
+
+      <Modal //thay doi toa do farm
         visible={modalUpdateGps}
         title="Tọa độ mới"
         onOk={handleSubmit2}

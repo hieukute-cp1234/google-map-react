@@ -6,7 +6,7 @@ import Search from '../search/index';
 import { PropertySafetyFilled } from '@ant-design/icons';
 
 
-function Menu({ markerList, handler }) {
+function Menu({ markerList }) {
   //seach trên menu
   const [search, setSearch] = useState('');
 
@@ -22,8 +22,8 @@ function Menu({ markerList, handler }) {
   //vị trí của input seach sau khi ảnh hiển thị
   const [marginTop, setMarginTop] = useState('10px');
 
+  // kiem tra dieu kien search
   let listItem = [];
-
   if (search.length > 0) {
     markerList.forEach((item) => {
       if (String(item.id).toLowerCase().indexOf(search) != -1) {
@@ -33,15 +33,9 @@ function Menu({ markerList, handler }) {
   } else {
     listItem = markerList
   }
-
-  // if(search.length > 0){
-  //   let newData = markerList.filter((item)=>{return search == item.id})
-  //   console.log(newData)
-  // }else {
-  //   listItem = markerList
-  // }
-
   console.log(listItem)
+
+  //ham search
   const handleSearch = (e) => {
     let value = e.target.value;
     console.log(value)
@@ -49,10 +43,7 @@ function Menu({ markerList, handler }) {
     setShowList(true);
     setShowInfo(false);
     setSearch(value);
-    //handler(search);
   }
-
-
 
   return (
     <>

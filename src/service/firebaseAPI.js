@@ -1,3 +1,4 @@
+//lay du lieu r chia cho cac componet  khac sung dung
 import firebase from '../firebase/config'
 
 const fetchData = async()=>{

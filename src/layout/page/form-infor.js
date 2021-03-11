@@ -15,7 +15,7 @@ function FormInfor() {
 
   let db = firebase.firestore();
 
-  // data fake
+  // data fake k dung
   var docData = {
     stringExample: "Hello world!",
     booleanExample: true,
@@ -31,6 +31,7 @@ function FormInfor() {
     }
   };
 
+  //luu thong tin vao firabase
   const onFinish = values => {
     console.log(values)
     db.collection('Farm')

@@ -5,8 +5,12 @@ import { Row, Col, Input, Form, Space, Collapse, InputNumber, Button, message  }
 import firebaseData from '../../service/firebaseAPI'
 import firebase from '../../firebase/config'
 
-const Product = (props) => {
+const Product = (props) => {//component nay de goi vao component Infor been duoi
+
+  //thay doi giao dien
   const [check, setCheck] = useState(true);
+
+  //giu lai ten san phan tren firebase
   const [nameProduct, setNameProduct] = useState('');
 
   const updateProduct = (name) => {
@@ -15,7 +19,7 @@ const Product = (props) => {
     setNameProduct(name);
   }
 
-  const deleteProduct = (item) => {
+  const deleteProduct = (item) => {//dang loi
     const db = firebase.firestore();
     db.collection('Farm').doc(props.farm).update({
       product: [
@@ -31,7 +35,7 @@ const Product = (props) => {
     console.log(item)
   }
 
-  const submit = (value) => {
+  const submit = (value) => {//cap nhap so luong
     const db = firebase.firestore();
     db.collection('Farm').doc(props.farm).update({
       product: [
@@ -125,10 +129,13 @@ const Product = (props) => {
 
 const Infor = () => {
 
+  //thay doi giao dien
   const [check1, setCheck1] = useState(true);
+
+  //luu data
   const [data, setData] = useState([]);
 
-  const { Panel } = Collapse;
+  const { Panel } = Collapse;//antd
 
   useEffect(() => {
     const fetchData = async () => {
